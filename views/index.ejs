@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('partials/head', {title: null}); %>
+</head>
+<body>
+	<header>
+		<%- include('partials/header'); %>
+	</header>
+
+	<!-- <pre><%= inspect(user) %></pre> -->
+
+	<main>
+		<div class="jumbotron">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7">
+						<div id="globalmap"></div>
+					</div>
+
+					<div class="col-md-5">
+						<h1 class="display-3"><%= title %></h1>
+						<p>Explore the world like a drone, or share your drone videos to the community</p>
+						<p>
+							<a class="btn btn-primary btn-lg" href="#">Explore <i class="fa fa-globe" aria-hidden="true"></i>
+							</a>
+							<a class="btn btn-success btn-lg" href="/auth/join">Share <i class="fa fa-video-camera" aria-hidden="true"></i>
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container">
+			<!-- Example row of columns -->
+			<h2>Community videos</h2>
+			<br>
+			<div class="row">
+				<div class="col-md-4">
+					<iframe id="ytplayer" type="text/html" width="320" height="180"
+					src="http://www.youtube.com/embed/nHjrmzXCVkE?autoplay=0"
+					frameborder="0">
+				</iframe>
+			</div>
+
+			<div class="col-md-8">
+				<h2>A la rencontre d'un requin bouledogue</h2>
+				<h3>Lagon de l'Ermitage, île de la réunion</h3>
+				<p>interaction entre un baigneur et un requin bouledogue dans le lagon de l'ermitage</p>
+				<p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+			</div>
+		</div>
+	</div>
+
+</main>
+
+<hr>
+
+<%- include('partials/footer.html'); %>
+
+<script>
+	var globalmap = L.map('globalmap').setView([0, 0], 1);
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA', {
+		maxZoom: 15,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+		'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+		'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(globalmap);
+
+	var marker = L.marker([51.5, -0.09]).addTo(globalmap);
+	marker.on('click', function(){
+		alert('open link');
+	})
+	var marker2 = L.marker([10, 30]).addTo(globalmap);
+</script>
+</body>
+</html>
