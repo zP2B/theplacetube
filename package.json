@@ -4,9 +4,10 @@
   "description": "Drone flight index for contributors and curious. Discover the map by drone videos.",
   "scripts": {
     "start": "node ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "nodemon --debug ./bin/www"
   },
-  "repository": "https://github.com/florianajir/dronemap.io.git",
+  "repository": "https://github.com/florianajir/dronemap.git",
   "keywords": [
     "drone",
     "geolocation",
@@ -18,9 +19,9 @@
   "author": "florianajir",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/florianajir/dronemap.io/issues"
+    "url": "https://github.com/florianajir/dronemap/issues"
   },
-  "homepage": "https://github.com/florianajir/dronemap.io#readme",
+  "homepage": "https://github.com/florianajir/dronemap#readme",
   "dependencies": {
     "bcrypt": "1.0.2",
     "body-parser": "~1.17.1",
@@ -31,14 +32,17 @@
     "ejs": "~2.5.6",
     "express": "~4.15.2",
     "express-session": "^1.15.5",
+    "express-validator": "^4.1.0",
     "font-awesome": "^4.7.0",
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^21.2.0",
     "jquery": "^3.2.1",
     "mongodb": "^2.2.31",
     "mongoose": "^4.11.8",
     "morgan": "~1.8.1",
     "octicons": "^6.0.1",
-    "open-iconic": "^1.1.1",
     "popper.js": "^1.11.0",
+    "pug": "^2.0.0-rc.3",
     "serve-favicon": "~2.4.2"
   },
   "devDependencies": {
