@@ -9,9 +9,6 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const util = require('util');
-
-const app = express();
-
 // routes
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -25,6 +22,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
   // we're connected!
 });
+
+const app = express();
 
 //use sessions for tracking logins
 app.use(session({
