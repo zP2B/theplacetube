@@ -1,0 +1,39 @@
+nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar')
+    a(class='navbar-brand' href='/')
+        i(class='fa fa-map-marker' aria-hidden='true')
+        | &nbsp; Dronemap
+    button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+        span(class='navbar-toggler-icon')
+    div#navbarCollapse(class='collapse navbar-collapse')
+        ul(class='navbar-nav mr-auto')
+            //li(class='nav-item active')
+            //    a(class='nav-link' href='#') Home
+            //        span(class='sr-only') (current)
+        ul(class='navbar-nav')
+            if userId && user
+                li(class='nav-item dropdown')
+                    a#usermenu(
+                    class='nav-link dropdown-toggle unselectable'
+                    href='/users/profile/' + user.username
+                    )&attributes(
+                    {
+                      'data-toggle': 'dropdown',
+                      'aria-haspopup': 'true',
+                      'aria-expanded': 'false'
+                    }
+                    )
+                        i(class='fa fa-user' aria-hidden='true')
+                        | &nbsp; #{user.username}
+
+                    div(class='dropdown-menu dropdown-menu-right')&attributes({'aria-labelledby': 'usermenu'})
+                        a(class='dropdown-item' href='/users/profile/' + user.username) View my profile
+                        a(class='dropdown-item' href='/users/profile/' + user.username + '/edit') Edit my account
+                        div(class='dropdown-divider')
+                        a(class='dropdown-item' href='/users/logout') Logout
+                            i(class='fa fa-sign-out' aria-hidden='true')
+            else
+                div(class='btn-toolbar')
+                    a(href='/users/login' class='btn btn-sm') Login
+                    a(href='/users/join' class='btn btn-success btn-sm')
+                        i(class='fa fa-sign-in' aria-hidden='true')
+                        | &nbsp; Join the club

@@ -1,0 +1,50 @@
+extends layout
+
+block append styles
+    link(rel='stylesheet' href='/stylesheets/profile.css')
+
+block content
+    div(class="jumbotron")
+        div(class="container text-center")
+            h1(class="display-3") #{profile.username}
+            div(class="d-flex justify-content-center")
+                div#usermap
+    div(class="container")
+        h2 Videos
+        br
+        div(class="row video_obj")
+            div(class="col-md-4")
+                iframe#ytplayer(
+                type="text/html"
+                width="320"
+                height="180"
+                src="http://www.youtube.com/embed/nHjrmzXCVkE?autoplay=0"
+                frameborder="0"
+                )
+            div(class="col-md-8")
+                h3 A la rencontre d'un requin bouledogue
+                h5
+                    i(class="fa fa-map-marker" aria-label="place")
+                    | &nbsp;Lagon de l'Ermitage, île de la réunion
+                p interaction entre un baigneur et un requin bouledogue dans le lagon de l'ermitage
+                p
+                    a(class="btn btn-secondary" href="#") View details &raquo;
+
+block append scripts
+    script.
+      var globalmap = L.map('usermap').setView([0, 0], 1);
+      L.tileLayer(
+          'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA',
+          {
+            maxZoom: 15,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(globalmap);
+
+      var marker = L.marker([51.5, -0.09]).addTo(globalmap);
+      marker.on('click', function() {
+        alert('open link');
+      });
+      var marker2 = L.marker([10, 30]).addTo(globalmap);

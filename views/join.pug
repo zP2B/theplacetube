@@ -1,0 +1,82 @@
+extends layout
+block append styles
+    link(rel='stylesheet' href='/stylesheets/login.css')
+
+block content
+    div(class='wrapper')
+        form#joinform(class='form-signin' method='POST' novalidate)
+            h2(class="form-signin-heading") Join the club
+            hr
+            div(class='form-group')
+                label(for="username") Choose a username
+                input#username(
+                name="username"
+                class="form-control"+ ((undefined === errors || undefined === errors.username) ? '' : ' is-invalid')
+                value="" + (undefined === user ? '' : user.username)
+                type="text"
+                aria-label="username"
+                placeholder="Username"
+                required=""
+                autofocus=""
+                )
+                if (errors && errors.username !== undefined)
+                    div(class="invalid-feedback alert alert-danger") #{errors.username.msg}
+            div(class='form-group')
+                label(for="email") Your email address
+                input#email(
+                type="text"
+                value="" + (undefined === user ? '' : user.email)
+                class="form-control" + ((undefined === errors || undefined === errors.email) ? '' : ' is-invalid')
+                name="email"
+                aria-label="email"
+                placeholder="Email Address"
+                required=""
+                )
+                //small#emailHelp(class="form-text text-muted") We'll never share your email with anyone else.
+                if (errors && errors.email !== undefined)
+                    div(class="invalid-feedback alert alert-danger") #{errors.email.msg}
+
+            div(class='form-group')
+                label(for="password") Choose a password
+                input#password(
+                type="password"
+                class="form-control" + ((undefined === errors || undefined === errors.password) ? '' : ' is-invalid')
+                name="password"
+                aria-label="password"
+                placeholder="Password"
+                required=""
+                )
+                //small#passwordHelpBlock(class="form-text text-muted") Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji
+                if (errors && errors.password !== undefined)
+                    div(class="invalid-feedback alert alert-danger") #{errors.password.msg}
+            div(class='form-group')
+                label(for="passwordConf") Confirm the password
+                input#passwordConf(
+                type="password"
+                class="form-control" + ((undefined === errors || undefined === errors.passwordConf) ? '' : ' is-invalid')
+                name="passwordConf"
+                aria-label="confirm password"
+                placeholder="Password"
+                required=""
+                )
+                if (errors && errors.passwordConf !== undefined)
+                    div(class="invalid-feedback alert alert-danger") #{errors.passwordConf.msg}
+
+            button(class="btn btn-lg btn-primary btn-block" type="submit") Submit
+            a(href="/users/login" class="btn btn-block" role="button" aria-label="login") You are already member of the club?
+
+block append scripts
+    script.
+      (function() {
+        "use strict";
+        window.addEventListener("load", function() {
+          var form = document.getElementById("joinform");
+          form.addEventListener("submit", function(event) {
+            if (form.checkValidity() == false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+          }, false);
+        }, false);
+      }());
