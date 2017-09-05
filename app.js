@@ -54,6 +54,7 @@ app.use('/js', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap'));
 app.use('/font-awesome', express.static(__dirname + '/node_modules/font-awesome'));
 app.use('/open-iconic', express.static(__dirname + '/node_modules/open-iconic'));
+app.use('/webcomponentsjs', express.static(__dirname + '/node_modules/webcomponentsjs'));
 
 app.use(function(req, res, next) {
   res.locals.userId = req.session.userId;
