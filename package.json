@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devstart": "nodemon --debug ./bin/www"
+    "devstart": "set DEBUG=dronemap:* & nodemon --debug ./bin/www"
   },
   "repository": "https://github.com/florianajir/dronemap.git",
   "keywords": [
@@ -43,7 +43,8 @@
     "octicons": "^6.0.1",
     "popper.js": "^1.11.0",
     "pug": "^2.0.0-rc.3",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "webcomponentsjs": "^1.0.2"
   },
   "devDependencies": {
     "express-debug": "^1.1.1"

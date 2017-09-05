@@ -1633,6 +1633,10 @@ void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+webcomponentsjs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/webcomponentsjs/-/webcomponentsjs-1.0.2.tgz#b028914c579a61d8144913c7c94c2cf73b95fc69"
+
 wide-align@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/wide-align/-/wide-align-1.1.2.tgz#571e0f1b0604636ebc0dfc21b0339bbe31341710"
