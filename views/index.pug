@@ -6,7 +6,7 @@ block content
             div(class='row')
                 div(class='col-md-7')
                     div#globalmap
-                div(class='col-md-5')
+                div(class='col-md-5 text-center text-lg-left')
                     h1(class='display-3') DroneMap
                     p Explore the world like a drone, or share your drone videos to the community
                     p
@@ -20,16 +20,17 @@ block content
         br
         div(class='row')
             div(class='col-md-4')
-                iframe#ytplayer(width='320' height='180' src='http://www.youtube.com/embed/nHjrmzXCVkE?autoplay=0' frameborder='0')&attributes({'type': 'text/html'})
+                div.embed-responsive.embed-responsive-16by9
+                    youtube-embed(embed="nHjrmzXCVkE" class='embed-responsive-item')
 
             div(class='col-md-8')
-                h3 A la rencontre d'un requin bouledogue
+                h3 Rencontre avec un requin bouledogue
                 h5
                     i(class='fa fa-map-marker' aria-label='place')
-                    | Lagon de l'Ermitage, île de la réunion
-                    p  interaction entre un baigneur et un requin bouledogue dans le lagon de l'ermitage
-                    p
-                        a(class='btn btn-secondary' href='#' role='button') View details &raquo;
+                    |&nbsp;Lagon de l'Ermitage, île de la Réunion
+                p  Un baigneur va à la rencontre d'un requin bouledogue dans le lagon de l'ermitage
+                p
+                    a(class='btn btn-secondary' href='#' role='button') View details &raquo;
 
 block append scripts
     script.
@@ -48,4 +49,4 @@ block append scripts
       marker.on('click', function() {
         alert('open link');
       })
-      var marker2 = L.marker([10, 30]).addTo(globalmap);
+      L.marker([10, 30]).addTo(globalmap);
