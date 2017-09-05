@@ -37,19 +37,21 @@ exports.user_join_get = function(req, res) {
 exports.user_join_post = function(req, res, next) {
   //Check that the name field is not empty
   req.check('username')
-  .notEmpty().withMessage('Username required')
-      .isAlphanumeric().withMessage('Only letters and numbers are allowed');
-  req.check('email').
-      notEmpty().
-      withMessage('Email required').
-      isEmail().
-      withMessage('Must be an email');
+      .notEmpty()
+      .withMessage('Username required')
+      .isAlphanumeric()
+      .withMessage('Only letters and numbers are allowed');
+  req.check('email')
+      .notEmpty()
+      .withMessage('Email required')
+      .isEmail()
+      .withMessage('Must be an email');
   req.check('password').notEmpty().withMessage('Password required');
-  req.check('passwordConf').
-      notEmpty().
-      withMessage('Password confirmation required').
-      equals(req.body.password).
-      withMessage('Passwords do not match');
+  req.check('passwordConf')
+      .notEmpty()
+      .withMessage('Password confirmation required')
+      .equals(req.body.password)
+      .withMessage('Passwords do not match');
   //Trim and escape the name field.
   req.sanitize('username').escape();
   req.sanitize('username').trim();
