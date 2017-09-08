@@ -12,6 +12,7 @@ block content
                     p
                         a(class='btn btn-primary btn-lg' href='#') Discover&nbsp;
                             i(class='fa fa-globe' aria-hidden='true')
+                        | &nbsp;
                         a(class='btn btn-success btn-lg' href='/users/join') Share&nbsp;
                             i(class='fa fa-video-camera' aria-hidden='true')
 
@@ -27,14 +28,18 @@ block content
                 h3 Rencontre avec un requin bouledogue
                 h5
                     i(class='fa fa-map-marker' aria-label='place')
-                    |&nbsp;Lagon de l'Ermitage, île de la Réunion
+                    | &nbsp;Lagon de l'Ermitage, île de la Réunion
                 p  Un baigneur va à la rencontre d'un requin bouledogue dans le lagon de l'ermitage
                 p
                     a(class='btn btn-secondary' href='#' role='button') View details &raquo;
 
 block append scripts
     script.
-      var globalmap = L.map('globalmap').setView([0, 0], 1);
+      var globalmap = L.map('globalmap', {
+        center: [0, 0],
+        zoom: 1,
+        maxBounds: [[-90, -180], [90, 180]]
+      });
       L.tileLayer(
           'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA',
           {
