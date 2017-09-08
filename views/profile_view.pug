@@ -1,0 +1,60 @@
+extends layout
+
+block append styles
+    link(rel='stylesheet' href='/stylesheets/profile.css')
+
+block content
+    div(class="jumbotron")
+        div(class="container text-center")
+            h1(class="display-3") #{profile.username}
+            h2(class="display-5") <i class="fa fa-map-marker"></i> #{profile.place}
+            div(class="d-flex justify-content-center")
+                div#usermap
+    div(class="container")
+        h2 Uploaded videos
+        br
+        div.card-deck
+            div.card
+                youtube-embed.card-img-top(embed="nHjrmzXCVkE")
+                div.card-body
+                    h4.card-title <i class="fa fa-map-marker"></i> Ile de la Réunion (France)
+                    p.card-text 7 days holidays in Reunion island
+                    //a(href="#" class="btn btn-primary") See More
+                div.card-footer
+                    small.text-muted Uploaded 3 mins ago
+
+            div.card
+                youtube-embed.card-img-top(embed="ZHHTSQNUkLc")
+                div.card-body
+                    h4.card-title <i class="fa fa-map-marker"></i> Mauricius
+                    p.card-text Indian ocean beauty
+
+                div.card-footer
+                    small.text-muted Uploaded 3 months ago
+            div.card
+                youtube-embed.card-img-top(embed="3N5QKUHPOzM")
+                div.card-body
+                    h4.card-title <i class="fa fa-map-marker"></i> Madagascar
+                    p.card-text For nature lovers
+
+                div.card-footer
+                    small.text-muted Uploaded 7 months ago
+
+block append scripts
+    script.
+      var globalmap = L.map('usermap').setView([0, 0], 1);
+      L.tileLayer(
+          'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA',
+          {
+            maxZoom: 15,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(globalmap);
+
+      var marker = L.marker([51.5, -0.09]).addTo(globalmap);
+      marker.on('click', function() {
+        alert('open link');
+      });
+      var marker2 = L.marker([10, 30]).addTo(globalmap);

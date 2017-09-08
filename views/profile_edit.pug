@@ -1,0 +1,62 @@
+extends layout
+
+block append styles
+    link(rel='stylesheet' href='/stylesheets/profile_form.css')
+    style.
+        .custom-file .custom-file-control::after {
+            content: "Select file...";
+        }
+
+        .custom-file .custom-file-control::before {
+            content: "Browse";
+        }
+
+        /*when a value is selected, this class removes the content */
+        .custom-file-control.selected::after {
+            content: "" !important;
+        }
+
+        .custom-file {
+            overflow: hidden;
+        }
+
+        .custom-file-control {
+            white-space: nowrap;
+        }
+
+block content
+    div(class="wrapper")
+        form#profile_form(method='POST' enctype='multipart/form-data')
+            h2(class="form-heading") Edit your profile
+            hr
+
+            if (profile.avatar)
+                div
+                    img#profileAvatar.rounded-circle.mb-2(src='/uploads/' + profile.avatar)
+
+            div(class='form-group')
+                label(for="username") Username
+                input#username.form-control(name="username" placeholder="Choose your username" required="" value="" + profile.username)
+            div(class='form-group')
+                label(for="email") Email
+                input#email.form-control(name="email" placeholder="Enter you email" required="" value="" + profile.email)
+            div(class='form-group')
+                label(for="place") Main place
+                input#place.form-control(name="place" placeholder="Enter a location" value="" + (profile.place === undefined ? '' : profile.place))
+
+            div(class='form-group')
+                label(for='avatar') Avatar
+                    //input#avatar(type="file" name="avatar")
+
+                label.custom-file
+                    input(type="file" id="avatar" class="custom-file-input")
+                    span.custom-file-control
+
+
+            input(type="submit")
+
+block append scripts
+    script.
+      $('.custom-file-input').on('change', function() {
+        $(this).next('.custom-file-control').addClass("selected").html($(this).val());
+      })

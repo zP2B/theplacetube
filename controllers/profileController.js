@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const fs = require('fs');
 
 exports.user_view_get = function(req, res, next) {
   User.findOne({username: req.params.username}).exec(function(err, user) {
@@ -10,7 +9,7 @@ exports.user_view_get = function(req, res, next) {
       err.status = 401;
       return next(err);
     } else {
-      res.render('profile', {profile: user});
+      res.render('profile_view', {profile: user});
     }
   });
 };
@@ -29,65 +28,61 @@ exports.user_edit_get = function(req, res, next) {
         err.status = 401;
         return next(err);
       } else {
-        res.render('profile_form', {profile: user});
+        res.render('profile_edit', {profile: user});
       }
     });
   }
 };
 
 exports.user_edit_post = function(req, res, next) {
-  if (!req.session.user || req.session.user.username !== req.body.username) {
+  if (!req.session.user) {
     let err = new Error('Forbidden access.');
     err.status = 403;
     return next(err);
   } else {
-
-    //Check that the name field is not empty
-    req.check('username', 'Username required').notEmpty();
-    req.check('email', 'Email required').notEmpty();
-
     //Trim and escape the name field.
-    req.sanitize('name').escape();
-    req.sanitize('name').trim();
+    req.sanitize('username').escape();
+    req.sanitize('username').trim();
     req.sanitize('email').escape();
     req.sanitize('email').trim();
     req.sanitize('place').escape();
     req.sanitize('place').trim();
 
+    req.check('username')
+        .notEmpty()
+        .withMessage('Username required')
+        .isAlphanumeric()
+        .withMessage('Only letters and numbers are allowed');
+    req.check('email')
+        .notEmpty()
+        .withMessage('Email required')
+        .isEmail()
+        .withMessage('Must be an email');
     //Run the validators
     let errors = req.validationErrors();
-
     //Create a genre object with escaped and trimmed data.
-    let user = new User({
+    let user = {
       username: req.body.username,
       email: req.body.email,
       place: req.body.place,
-    });
-
-    if (errors) {
-      //If there are errors render the form again, passing the previously entered values and errors
-      res.render('profile_form',
-          {title: 'Edit profile', profile: user, errors: errors});
+    };
+    if (req.file) {
+      //TODO remove old one
+      user.avatar = req.file.filename;
     }
-    else {
-      if (req.files && req.files.picture) {
-        fs.readFile(req.files.picture, function(err, data) {
-          let uploadPath = __dirname + '/public/uploads/' + req.session.userId;
-          fs.writeFile(uploadPath, data, function(err) {
-          });
-        });
-      }
-
-      User.findOneAndUpdate({_id: req.session.userId}, user,
-          function(error, user) {
-            if (error) {
-              return next(error);
-            } else {
-              req.session.userId = user._id;
-              req.session.user = user;
-              return res.redirect('/users/profile/' + user.username);
-            }
-          });
+    if (errors) {
+      console.error(errors);
+      //If there are errors render the form again, passing the previously entered values and errors
+      res.render('profile_edit', {title: 'Edit profile', profile: user, errors: errors});
+    } else {
+      User.findOneAndUpdate({_id: req.session.userId}, user, function(error, user) {
+        if (error) {
+          return next(error);
+        } else {
+          req.session.user = user;
+          return res.redirect('/users/profile/' + user.username);
+        }
+      });
     }
   }
 };
