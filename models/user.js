@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   place: String,
+  avatar: String
 });
 
 //authenticate input against database
