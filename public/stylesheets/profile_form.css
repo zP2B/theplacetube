@@ -1,0 +1,37 @@
+body {
+    background: #eee url("https://api.mapbox.com/styles/v1/dronemapio/cj6tustmf0hmq2spebipvj2lm/static/10.563429,36.901412,1.20,0.00,0.00/1200x800?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA") !important;
+}
+
+#profile_form {
+    max-width: 380px;
+    padding: 15px 35px 15px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.wrapper {
+    margin-top: 50px;
+}
+
+.form-heading {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    z-index: 2;
+}
+
+.form-group {
+    margin-bottom: 0.8rem;
+}
