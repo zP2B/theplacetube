@@ -14,17 +14,16 @@ block content
         div#rightPanel.col-12.col-md-6.col-lg-5.col-xl-4
             div#videolist
                 div#videolist-topbar
-                    div
-                        h1.lead Search videos around you
-                        form#search(action='/ajax/place' method='get')
-                            div.input-group
-                                span.input-group-btn
-                                    button#geolocate.btn.btn-outline-secondary(type="button" onclick="getLocation()")
-                                        i.fa.fa-location-arrow
-                                input#place.form-control(placeholder="Search place" name='search' type="search")
-                                span.input-group-btn
-                                    button.btn.btn-primary(type="submit")
-                                        i.fa.fa-search
+                    h1.lead Search videos around you
+                    form#search(action='/ajax/place' method='get')
+                        div.input-group
+                            span.input-group-btn
+                                button#geolocate.btn.btn-outline-secondary(type="button" onclick="getLocation()")
+                                    i.fa.fa-location-arrow
+                            input#place.form-control(placeholder="Search place" name='search' type="search")
+                            span.input-group-btn
+                                button.btn.btn-primary(type="submit")
+                                    i.fa.fa-search
                 div#videolist-container
                     div#videolist-list
                         each video in videos
