@@ -1,0 +1,261 @@
+extends layout
+
+block content
+    div.container.mt-5
+        div.row
+            div.col
+                if errors
+                    ul.alert.alert-danger
+                        for error in errors
+                            li!= error.msg
+
+                form(method='post')
+                    div.form-group
+                        label(for='youtubeId') Youtube ID or Youtube URL
+                        input#youtubeId.form-control(
+                        name='youtubeId'
+                        value="" + (undefined === video ? '' : video.youtubeId)
+                        required=''
+                        placeholder='https://www.youtube.com/watch?v=nHjrmzXCVkE'
+                        )
+                    div.form-group
+                        label(for='title') Title
+                        input#title.form-control(
+                        name='title'
+                        value="" + (undefined === video ? '' : video.title)
+                        placeholder='Video title'
+                        )
+                    div.form-group
+                        label(for='description') Description
+                        textarea#description.form-control(
+                        name='description'
+                        placeholder='Video description'
+                        )= video ? video.description : ''
+                    div.form-group
+                        label(for='tags') Tags
+                        input#tags.form-control(
+                        name='tags'
+                        value="" + (undefined === video ? '' : video.tags)
+                        placeholder='Keywords'
+                        )
+                    div.form-group
+                        label(for='place') Place
+                        input#place.form-control(
+                        name='place[name]'
+                        value="" + (undefined === video || undefined === video.place ? '' : video.place.name)
+                        placeholder='Location name'
+                        )
+                    div.form-group.form-row
+                        div.col-7
+                            input#city.form-control(
+                            name="place[city]"
+                            value="" + (undefined === video || undefined === video.place ? '' : video.place.city)
+                            placeholder="City"
+                            )
+                        div.col
+                            input#state.form-control(
+                            type="text"
+                            name="place[state]"
+                            value="" + (undefined === video || undefined === video.place ? '' : video.place.state)
+                            placeholder="State"
+                            )
+                        div.col
+                            input#country.form-control(
+                            type="text"
+                            name="place[country]"
+                            value="" + (undefined === video || undefined === video.place ? '' : video.place.country)
+                            placeholder="Country"
+                            )
+                    div.form-group
+                        label Coordinates
+                        div.form-row
+                            input(type="hidden" name="place[location][type]" value="Point")
+                            div.col
+                                input#latitude.form-control(
+                                name="place[location][coordinates][1]"
+                                type="number"
+                                min="-90"
+                                max="90"
+                                step="0.000001"
+                                placeholder='latitude'
+                                value="" + (undefined === video || undefined === video.place ? '' : video.place.latitude)
+                                )
+                            div.col
+                                input#longitude.form-control(
+                                name="place[location][coordinates][0]"
+                                type="number"
+                                min="-180"
+                                max="180"
+                                step="0.000001"
+                                placeholder='longitude'
+                                value="" + (undefined === video || undefined === video.place ? '' : video.place.longitude)
+                                )
+                    div.form-check
+                        label.form-check-label(for='owner')
+                            input#owner.form-check-input(
+                            name='owner'
+                            type='checkbox'
+                            )
+                            |
+                            | I am the owner of the video
+
+                    button.btn.btn-primary(type="submit") Submit
+
+            div.col
+                div#preview.card.d-none
+                    div.loading
+                    div.card-body
+                        h5#titlePreview.card-title
+                        h6
+                            i#locationIconPreview.fa.fa-map-marker.d-none
+                            span#locationPreview.ml-1
+                        div.card-text
+                            p#descriptionPreview
+                            p#tagsPreview
+                    div.card-footer
+                        small.text-muted Uploaded by #{user.username}
+
+block append scripts
+    script(src='/get-youtube-id/index.js')
+    script.
+      $(document).ready(function() {
+        if ($('#youtubeId').val()) {
+          $('#youtubeId').trigger('change');
+        }
+      });
+      $('#youtubeId').on('keyup change', videoListener);
+      $('#place, #city, #state, #country').on('keyup change', refreshLocationPreview);
+      $('#description, #title').on('keyup change', refreshTextPreview);
+      $('#tags').on('keyup change', refreshTagsPreview);
+
+      function refreshTextPreview() {
+        $('#titlePreview').text($('#title').val());
+        var descriptionPreview = $('#description').val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+        if (descriptionPreview.length > 200) {
+          descriptionPreview = descriptionPreview.substr(0, 200) + '...';
+        }
+        $('#descriptionPreview').html(descriptionPreview);
+      }
+
+      function refreshLocationPreview() {
+        var city = $('#city').val();
+        var country = $('#country').val();
+        var state = $('#state').val();
+        var place = $('#place').val();
+        var location = [place, city, state, country].filter(String).join(', ');
+        $('#locationPreview').text(location);
+        if (location) {
+          $('#locationIconPreview').removeClass('d-none');
+        }
+        loaderOff();
+      }
+
+      function loaderOn() {
+        $('.loading').removeClass('d-none');
+        $('#preview').addClass('overlay');
+      }
+      function loaderOff() {
+        $('.loading').addClass('d-none');
+        $('#preview').removeClass('overlay');
+      }
+
+      var youtubeId;
+      function videoListener() {
+        if (this.value.length === 11) {
+          youtubeId = this.value;
+        } else {
+          youtubeId = getYouTubeID(this.value);
+        }
+        if (youtubeId !== null) {
+          loaderOn();
+          updateVideoPreview(youtubeId);
+          requestDetails(youtubeId, populateFormFromVideoTags);
+        } else {
+          removePreview();
+        }
+      }
+
+      function removePreview() {
+        $('#embedPreview').remove();
+        $('#preview').addClass('d-none');
+      }
+
+      function requestDetails(youtubeId, callback) {
+        var requestURL = location.origin + "/ajax/youtube/details/" + youtubeId;
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+          callback(request.response);
+        }
+      }
+
+      function updateVideoPreview(youtubeId) {
+        var embed = $('<youtube-embed id="embedPreview" class="card-img-top"/>').attr('embed', youtubeId);
+        if ($('#embedPreview').length) {
+          $('#embedPreview').replaceWith(embed);
+        } else {
+          $('#preview').removeClass('d-none').prepend(embed);
+
+        }
+      }
+
+      function populateFormFromVideoTags(video) {
+        document.getElementById('title').value = video.snippet.title;
+        document.getElementById('description').value = video.snippet.description;
+        refreshTextPreview();
+        document.getElementById('tags').value = video.snippet.tags.slice(0, 10).join(', ');
+        refreshTagsPreview();
+        if (video.recordingDetails) {
+            var latitude = video.recordingDetails.location.latitude;
+            var longitude = video.recordingDetails.location.longitude;
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+            reverseGeocoding(latitude, longitude, populateAddressFromReverseGeocoding);
+        } else {
+          loaderOff();
+        }
+      }
+
+      function refreshTagsPreview() {
+        var tagsPreview = $('#tagsPreview');
+        tagsPreview.empty();
+        var tags = document.getElementById('tags')
+            .value
+            .split(',')
+            .map(Function.prototype.call, String.prototype.trim)
+            .filter(String);
+        if (tags.length) {
+          tagsPreview.removeClass('d-none');
+        } else {
+          tagsPreview.addClass('d-none');
+        }
+
+        $.each(tags.slice(0, 10), function(index, value) {
+          $('#tagsPreview').append(
+              '<span class="badge badge-secondary mr-1"><i class="fa fa-tag"></i>&nbsp;' + $.trim(value) + '</span>'
+          );
+        });
+        if (tags.length > 10) {
+          $('#tags').val(tags.slice(0, 10).join(', '))
+        }
+      }
+
+      function populateAddressFromReverseGeocoding(video) {
+        document.getElementById('city').value = video.town ? video.town : '';
+        document.getElementById('state').value = video.state ? video.state : '';
+        document.getElementById('country').value = video.country ? video.country : '';
+        refreshLocationPreview();
+      }
+
+      function reverseGeocoding(lat, lon, callback) {
+        var requestURL = "http://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=" + lat + "&lon=" + lon;
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+          callback(request.response.address);
+        }
+      }

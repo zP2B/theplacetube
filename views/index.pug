@@ -1,44 +1,78 @@
 extends layout
+include mixins/videocard
 
 block content
-    div(class='jumbotron')
-        div(class='container')
-            div(class='row')
-                div(class='col-md-7')
-                    div#globalmap
-                div(class='col-md-5 text-center text-lg-left')
-                    h1(class='display-3') DroneMap
-                    p Explore the world like a drone, or share your drone videos to the community
-                    p
-                        a(class='btn btn-primary btn-lg' href='#') Discover&nbsp;
-                            i(class='fa fa-globe' aria-hidden='true')
-                        | &nbsp;
-                        a(class='btn btn-success btn-lg' href='/users/join') Share&nbsp;
-                            i(class='fa fa-video-camera' aria-hidden='true')
-
-    div(class='container')
-        h2 Community videos
-        br
-        div(class='row')
-            div(class='col-md-4')
-                div.embed-responsive.embed-responsive-16by9
-                    youtube-embed(embed="nHjrmzXCVkE" class='embed-responsive-item')
-
-            div(class='col-md-8')
-                h3 Rencontre avec un requin bouledogue
-                h5
-                    i(class='fa fa-map-marker' aria-label='place')
-                    | &nbsp;Lagon de l'Ermitage, île de la Réunion
-                p  Un baigneur va à la rencontre d'un requin bouledogue dans le lagon de l'ermitage
-                p
-                    a(class='btn btn-secondary' href='#' role='button') View details &raquo;
+    div#navigator.row.no-gutters
+        div#leftPanel.col-12.col-md-6.col-lg-7.col-xl-8
+            div#map
+            div#videopreview.d-none
+            a#backtomap.d-none
+                span.badge.badge-light
+                    i.fa.fa-undo(title="Back to map")
+                    |
+                    | Back to map
+        div#rightPanel.col-12.col-md-6.col-lg-5.col-xl-4
+            div#videolist
+                div#videolist-topbar
+                    div
+                        h1.lead Search videos around you
+                        form#search(action='/ajax/place' method='get')
+                            div.input-group
+                                span.input-group-btn
+                                    button#geolocate.btn.btn-outline-secondary(type="button" onclick="getLocation()")
+                                        i.fa.fa-location-arrow
+                                input#place.form-control(placeholder="Search place" name='search' type="search")
+                                span.input-group-btn
+                                    button.btn.btn-primary(type="submit")
+                                        i.fa.fa-search
+                div#videolist-container
+                    div#videolist-list
+                        each video in videos
+                            - var timeago = moment(video.date).fromNow()
+                            a.media.video.videolist-media.mt-2&attributes({
+                              'data-id': video._id,
+                              "data-youtube-id": video.youtubeId,
+                              'data-latitude': video.place.location.coordinates[1],
+                              'data-longitude': video.place.location.coordinates[0],
+                              "data-title": video.title,
+                              "data-description": video.description,
+                              "data-place": videoPlaceHelper(video.place),
+                              "data-tags": video.tags,
+                              "data-publisher": video.publisher.username,
+                              "data-timeago": timeago,
+                              "href": "/videos/" + video._id
+                            })
+                                span.videolist-status
+                                img.d-flex.mr-2(src="https://img.youtube.com/vi/" + video.youtubeId + "/hqdefault.jpg" alt=video.title width=100 height=56)
+                                div.media-body
+                                    h5.h6.videolist-title= video.title
+                                    h6.videolist-author= video.publisher.username
+    div#video-metaviewer.row.no-gutters.d-none
 
 block append scripts
     script.
-      var globalmap = L.map('globalmap', {
+      $.fn.scrollTo = function(container, speed) {
+        if (typeof(speed) === 'undefined')
+          speed = 1000;
+        if (typeof(container) === 'undefined')
+          container = $('html, body');
+        container.animate({
+          scrollTop: parseInt($(this).offset().top)
+        }, speed);
+      };
+    script.
+      var listenOnMove = true;
+      var markers = [];
+      var map = L.map('map', {
+        attributionControl: false,
         center: [0, 0],
-        zoom: 1,
+        zoom: 2,
         maxBounds: [[-90, -180], [90, 180]]
+      });
+      map.on('moveend', function() {
+        if (listenOnMove) {
+          refreshBounds(map.getBounds());
+        }
       });
       L.tileLayer(
           'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA',
@@ -48,10 +82,236 @@ block append scripts
             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
             'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets'
-          }).addTo(globalmap);
+          }
+      ).addTo(map);
+      initMarkers();
 
-      var marker = L.marker([51.5, -0.09]).addTo(globalmap);
-      marker.on('click', function() {
-        alert('open link');
+      $('#search').on('submit', function(event) {
+        // process the form
+        $.ajax({
+          type: 'GET',
+          url: $(this).attr('action'),
+          data: {
+            'search': $('input[name=search]').val()
+          },
+          dataType: 'json',
+          encode: true
+        }).done(function(data) {
+          if (data.boundingbox) {
+            listenOnMove = false;
+            map.fitBounds([
+              [data.boundingbox[1], data.boundingbox[3]],
+              [data.boundingbox[0], data.boundingbox[2]]
+            ]);
+            refreshVideoList(data.videos);
+            initMarkers();
+            listenOnMove = true;
+          }
+        });
+        // stop the form from submitting the normal way and refreshing the page
+        event.preventDefault();
+      });
+
+      //click on videolist element
+      $(document).on('click', 'a.videolist-media', function(e) {
+        //$('a.videolist-media').on('click', function(e) {
+        e.preventDefault();
+        $('#map').addClass('d-none');
+        $('.videolist-status').empty();
+        $(this).addClass('visited');
+        $('a.videolist-media.active').removeClass('active');
+        $(this).addClass('active');
+        $(this).find('.videolist-status').append('<i class="fa fa-play"></i>');
+        $('#videopreview').removeClass('d-none')
+            .empty()
+            .append('<iframe frameborder=0 allowfullscreen src="https://www.youtube.com/embed/' + $(this).attr('data-youtube-id') + '?rel=0&showinfo=0&autoplay=1" />');
+        showMetadata($(this));
+        $('#backtomap')
+            .removeClass('d-none')
+            .on('click', function() {
+              $(this).addClass('d-none');
+              $('#videopreview').empty().addClass('d-none');
+              $('#map').removeClass('d-none');
+              $('.videolist-status').empty();
+              $('a.videolist-media.active').removeClass('active');
+              hideMetadata();
+            });
+
+        return false;
       })
-      L.marker([10, 30]).addTo(globalmap);
+
+      function initMarkers() {
+        markers.map(function(marker) {
+          map.removeLayer(marker)
+        });
+        markers = [];
+        $(".videolist-media").each(function() {
+          var that = $(this);
+          var marker = L.marker(
+              [$(this).attr('data-latitude'), $(this).attr('data-longitude')],
+              {title: $(this).attr('data-title')}
+          );
+          marker.on('click', function() {
+            that.scrollTo($("#videolist-list"));
+            that.trigger('click');
+          });
+          marker.addTo(map);
+          markers.push(marker);
+        });
+      }
+
+      function refreshVideoList(videos) {
+        $('#videolist-list').empty();
+        $.each(videos, function(index, video) {
+          var timeago = moment(video.date).fromNow();
+          var media = $('<a>').attr({
+            'class': 'media video videolist-media mt-2',
+            'data-id': video._id,
+            "data-youtube-id": video.youtubeId,
+            'data-latitude': video.place.location.coordinates[1],
+            'data-longitude': video.place.location.coordinates[0],
+            "data-title": video.title,
+            "data-description": video.description,
+            "data-place": [video.place.name, video.place.city, video.place.state, video.place.country].filter(String).join(', '),
+            "data-tags": video.tags,
+            "data-publisher": video.publisher.username,
+            "data-timeago": timeago,
+            "href": "/videos/" + video._id
+          });
+          media.append($('<span class="videolist-status">'));
+          media.append(
+              $('<img/>').attr({
+                'class': "d-flex mr-2",
+                'src': 'https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg',
+                'alt': video.title,
+                'width': '100',
+                'height': '56'
+              })
+          );
+          media.append(
+              $('<div class="media-body"/>')
+                  .append($('<h5 class="h6 videolist-title"/>').text(video.title))
+                  .append($('<h6 class="videolist-author"/>').text(video.publisher.username))
+          );
+          $('#videolist-list').append(media);
+        });
+
+      }
+
+      function refreshBounds(bounds) {
+        $.ajax({
+          type: 'GET',
+          url: '/ajax/bounds',
+          data: {
+            'south': bounds.getSouth(),
+            'west': bounds.getWest(),
+            'north': bounds.getNorth(),
+            'east': bounds.getEast()
+          },
+          dataType: 'json',
+          encode: true
+        }).done(function(data) {
+          refreshVideoList(data);
+          initMarkers();
+        });
+      }
+
+      function showMetadata(video) {
+        var metaviewer = $('#video-metaviewer');
+        metaviewer.empty().removeClass('d-none');
+        var metadata = $('<div class="video-metadata.d-none.col-12.col-md-6.col-lg-7.col-xl-8"/>');
+        metadata.append($('<h1 class="lead"/>').text(video.attr('data-title')));
+        metadata.append(
+            $('<h2 class="h6 mt-3"/>')
+                .append($('<i class="fa fa-map-marker mr-1"/>'))
+                .append(video.attr('data-place'))
+        );
+        metadata.append($('<hr/>'));
+        metadata.append(
+            $('<p class="mt-3 small"/>').html(video.attr('data-description').replace(/(?:\r\n|\r|\n)/g, '<br />'))
+        );
+        metadata.append($('<hr/>'));
+        var tmp = video.attr('data-tags').split(',').map(Function.prototype.call, String.prototype.trim).filter(String);
+        let tags = '';
+        for (let i = 0, len = tmp.length; i < len; i++) {
+          tags += '<span class=\'badge badge-secondary mr-1\'><i class=\'fa fa-tag mr-1\'></i>' + tmp[i] + '</span>';
+        }
+        metadata.append($('<div class="mt-3"/>').html(tags));
+        metaviewer.append(metadata);
+      }
+
+      function hideMetadata() {
+        $('#video-metaviewer').empty().addClass('d-none');
+      }
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          console.log('navigator ok');
+          disableGeoloc();
+          navigator.geolocation.getCurrentPosition(function(position) {
+            console.log(position);
+            reverseGeocoding(position.coords.latitude, position.coords.longitude, function(address) {
+              console.log(address);
+              var location = [address.suburb, address.town, address.state, address.country].filter(String).join(', ')
+              $('#place').val(location);
+              enableGeoloc();
+              $('#search').trigger('submit');
+            })
+          }, function showError(error) {
+            var message;
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                message = "User denied the request for Geolocation."
+                break;
+              case error.POSITION_UNAVAILABLE:
+                message = "Location information is unavailable."
+                break;
+              case error.TIMEOUT:
+                message = "The request to get user location timed out."
+                break;
+              case error.UNKNOWN_ERROR:
+                message = "An unknown error occurred."
+                break;
+            }
+            if (Notification.permission === "granted") {
+              // Si c'est ok, créons une notification
+              new Notification(message);
+            } else if (Notification.permission !== 'denied') {
+              Notification.requestPermission(function(permission) {
+                if (!('permission' in Notification)) {
+                  Notification.permission = permission;
+                }
+                if (permission === "granted") {
+                  new Notification(message);
+                }
+              });
+            }
+            removeGeoloc()
+          });
+        } else {
+          new Notification("Geolocation is not supported by this browser.");
+          removeGeoloc();
+        }
+      }
+
+      function removeGeoloc() {
+        $('#geolocate').remove();
+      }
+      function disableGeoloc() {
+        $('#geolocate').prop('disabled', true).find('>i').addClass('fa-spin');
+      }
+
+      function enableGeoloc() {
+        $('#geolocate').prop('disabled', false).find('>i').removeClass('fa-spin');
+      }
+
+      function reverseGeocoding(lat, lon, callback) {
+        var requestURL = "http://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=" + lat + "&lon=" + lon;
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+          callback(request.response.address);
+        }
+      }

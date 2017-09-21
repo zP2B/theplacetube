@@ -1,19 +1,17 @@
 nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar')
     a(class='navbar-brand' href='/')
         i(class='fa fa-map-marker' aria-hidden='true')
-        | &nbsp; Dronemap
+        | &nbsp; PlaceTube
     button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
         span(class='navbar-toggler-icon')
     div#navbarCollapse(class='collapse navbar-collapse')
         ul(class='navbar-nav mr-auto')
-            //li(class='nav-item active')
-            //    a(class='nav-link' href='#') Home
-            //        span(class='sr-only') (current)
         ul(class='navbar-nav')
             if userId && user
+                li.nav-item
+                    a.nav-link.btn.btn-success(href='/videos/add') <i class="fa fa-plus"></i>&nbsp;Add video
                 li(class='nav-item dropdown')
-                    a#usermenu(
-                    class='nav-link dropdown-toggle unselectable'
+                    a#usermenu.nav-link.dropdown-toggle.unselectable(
                     href='/users/profile/' + user.username
                     )&attributes({
                       'data-toggle': 'dropdown',

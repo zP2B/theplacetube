@@ -1,12 +1,12 @@
-# DroneMap
+# placetube
 > This is an opensource NodeJS prototype, free for use and fork.
 
-Discover world videos on a map and share your videos with community.
+Discover the place tube around you and share your videos on the map.
 
 
 ## Features
 
-With DroneMap, people can now discover the world from his computer and smartphone.
+With PlaceTube, people can now discover the world from his computer and smartphone.
 * Discover the world places by watching the community videos
 * Share you videos with the community
 * Make money from your videos by selling your rights or with the views

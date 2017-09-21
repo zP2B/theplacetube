@@ -1,6 +1,9 @@
 extends layout
 
 block content
-    h2 #{message}
-    h2 #{error.status}
-    pre #{error.stack}
+    div.text-center.alert.alert-danger
+        h2
+            | #{error.status} #{message}
+        a(href='/')
+            | Return home
+    pre.alert.alert-light #{error.stack}

@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Video = require('../models/video');
 
 exports.user_view_get = function(req, res, next) {
   User.findOne({username: req.params.username}).exec(function(err, user) {
@@ -9,7 +10,21 @@ exports.user_view_get = function(req, res, next) {
       err.status = 401;
       return next(err);
     } else {
-      res.render('profile_view', {profile: user});
+      Video.find({'publisher._id': '' + user._id})
+          .sort('date')
+          .limit(10)
+          .exec(function(err, videos) {
+            if (err) {
+              next(err);
+              return;
+            }
+            console.log(videos);
+            res.render('profile_view', {
+              title: 'Profile of ' + user.username,
+              profile: user,
+              videos: videos,
+            });
+          });
     }
   });
 };

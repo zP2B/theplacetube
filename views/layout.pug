@@ -6,20 +6,30 @@ html
         link(rel="icon" href="/favicon.ico")
         link(rel="icon" href="/favicon.png" sizes="32x32" type="image/png")
         link(rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml")
+        //script(src="bower_components/webcomponentsjs/webcomponents-loader.js")
         link(rel="import" href="/webcomponents/youtube-embed.html")
-
+        //og
+        meta(property="og:title" content=title)
+        meta(property="og:type" content=(video ? "video" : "website"))
+        meta(property="og:description" content="Explore the world like a drone, or share your drone videos to the community")
+        meta(property="og:url" content=currentUrl)
+        meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : baseUrl + "/favicon.svg"))
+        meta(property="og:site_name" content="PlaceTube")
+        //meta(property="og:locale" content="en")
+        if video
+            meta(property="og:video" content="https://www.youtube.com/watch?v=" + video.youtubeId)
 
         block styles
             link(rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css")
-            link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css")
+            link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" data-require="fontawesome@*")
             link(rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="")
             link(rel="stylesheet" href="/stylesheets/style.css")
 
-        title Dronemap - #{title}
+        title PlaceTube - #{title}
     body
-        header
-            include includes/navbar.pug
-        main
+        //header
+        include includes/navbar.pug
+        main.fill
             block content
         footer
             include includes/footer.pug
@@ -28,5 +38,6 @@ html
             script(src="/js/umd/popper.min.js")
             script(src="/bootstrap/dist/js/bootstrap.min.js")
             script(src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="")
-            //TODO found lighter and newer lib or fallback on incompat
+            //TODO find lighter and newer lib or fallback on incompat
             script(src="/webcomponentsjs/full.js")
+            script(src="/moment/min/moment.min.js")
