@@ -29,11 +29,11 @@ block content
                     div#videolist-list.list-group
                         each video in videos
                             - var timeago = moment(video.date).fromNow()
-                            a.media.video.videolist-media.mt-2.list-group-item.list-group-item-action&attributes({
-                              'data-id': video._id,
+                            a.media.video.videolist-media.list-group-item.premiumvid.list-group-item-action&attributes({
+                              "data-id": video._id,
                               "data-youtube-id": video.youtubeId,
-                              'data-latitude': video.place.location.coordinates[1],
-                              'data-longitude': video.place.location.coordinates[0],
+                              "data-latitude": video.place.location.coordinates[1],
+                              "data-longitude": video.place.location.coordinates[0],
                               "data-title": video.title,
                               "data-description": video.description,
                               "data-place": videoPlaceHelper(video.place),
@@ -46,6 +46,8 @@ block content
                                 div.media-body
                                     h5.h6.videolist-title= video.title
                                     h6.videolist-author= video.publisher.username
+                                span.badge.badge-warning.float-right.mb-auto
+                                  i.fa.fa-star(title='Community video')
 
 block append scripts
     script.
@@ -206,7 +208,7 @@ block append scripts
         $.each(videos, function(index, video) {
           var timeago = moment(video.date).fromNow();
           var media = $('<a>').attr({
-            'class': 'media video videolist-media mt-2 list-group-item list-group-item-action',
+            'class': 'media video videolist-media list-group-item list-group-item-action',
             'data-id': video._id,
             "data-youtube-id": video.youtubeId,
             'data-latitude': video.place.location.coordinates[1],
@@ -219,6 +221,7 @@ block append scripts
             "href": "/videos/" + video._id
           });
           if (youtube) media.addClass('youtube-media');
+          else media.addClass('premiumvid');
           var place = [video.place.name, video.place.city, video.place.state, video.place.country].filter(String);
           if (place.length) {
             media.attr('data-place', place.join(', '))
@@ -230,14 +233,17 @@ block append scripts
                 'alt': video.title
               })
           );
-          media.append(
-              $('<div class="media-body"/>')
-                  .append($('<h5 class="h6 videolist-title"/>').text(video.title))
-                  .append($('<h6 class="videolist-author mb-0"/>').text(video.publisher.username))
-          );
+          var body = $('<div class="media-body"/>')
+              .append($('<h5 class="h6 videolist-title"/>').text(video.title))
+              .append($('<h6 class="videolist-author mb-0"/>').text(video.publisher.username));
+          media.append(body);
+          if (!youtube) {
+            media.append(
+               $("<span class='badge badge-warning float-right mb-auto'/>").html("<i class='fa fa-star' title='Community video' />")
+            )
+          }
           $('#videolist-list').append(media);
         });
-
       }
 
       function resetMap() {
@@ -301,11 +307,9 @@ block append scripts
 
       function getLocation() {
         if (navigator.geolocation) {
-          console.log('navigator ok');
           disableGeoloc();
           navigator.geolocation.getCurrentPosition(function(position) {
             reverseGeocoding(position.coords.latitude, position.coords.longitude, function(address) {
-              console.log(address);
               var location = [address.suburb, address.town, address.state, address.country].filter(String).join(', ')
               $('#place').val(location);
               enableGeoloc();
@@ -351,6 +355,7 @@ block append scripts
       function removeGeoloc() {
         $('#geolocate').remove();
       }
+
       function disableGeoloc() {
         $('#geolocate').prop('disabled', true).find('>i').addClass('fa-spin');
       }
