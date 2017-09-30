@@ -22,11 +22,17 @@ footer {
     background-color: #f5f5f5;
 }
 
+.wrapper {
+    overflow: auto;
+    padding: 20px;
+    max-height: 100%;
+    margin-top: 0;
+}
+
 .spacer {
     height: 40px;
     clear: both;
 }
-
 .fill {
     min-height: 100%;
     height: 100%;
@@ -135,6 +141,8 @@ input[type=number] {
     justify-content: flex-start;
     align-items: self-start;
     flex-shrink: 0;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #videolist-list img {
@@ -159,26 +167,29 @@ a.media.list-group-item {
     /*text-decoration: none;*/
     /*color: inherit;*/
     display: flex;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
     flex-grow: 0;
+    border-radius: 0;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 a.media.list-group-item:not(.active) {
-    background-color: inherit;
-    border-color: transparent;
+    /*background-color: inherit;*/
+    /*border-color: transparent;*/
 }
 
 a.media.active {
-    opacity: 1 !important;
-    font-weight: 600;
+    /*opacity: 1 !important;*/
+    /*font-weight: 600;*/
 }
 
 a.videolist-media.visited {
-    opacity: 0.7;
+    /*opacity: 0.7;*/
 }
 
 .videolist-title {
@@ -188,9 +199,12 @@ a.videolist-media.visited {
     overflow: hidden;
     /*font-size: 10px;*/
     font-size: 0.9rem;
-    font-weight: 500;
+    /*font-weight: 500;*/
     line-height: 1rem;
     font-family: Roboto, Arial, sans-serif;
+}
+a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist-title{
+    font-weight: 600;
 }
 
 .videolist-status {
@@ -222,6 +236,7 @@ a.videolist-media.visited {
     font-weight: 400;
     line-height: 1rem;
     text-transform: none;
+    margin-bottom: 0;
 }
 
 .videolist-media {
@@ -307,12 +322,3 @@ img#profileAvatar {
         transform: rotate(360deg);
     }
 }
-
-/*.card-columns {*/
-/*@include media-breakpoint-only(lg) {*/
-/*column-count: 4;*/
-/*}*/
-/*@include media-breakpoint-only(xl) {*/
-/*column-count: 5;*/
-/*}*/
-/*}*/
