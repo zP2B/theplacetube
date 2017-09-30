@@ -5,6 +5,44 @@ const Video = require('../models/video');
 const axios = require('axios');
 const serializer = require('../serializers/video');
 
+exports.get_place_coordinates = function(req, res, next) {
+  let request = {};
+  if (req.query.city || req.query.state || req.query.country) {
+    request = {
+      'street': req.query.place,
+      'city': req.query.city,
+      'state': req.query.state,
+      'country': req.query.country,
+    };
+
+  } else {
+    request.q = req.query.place;
+  }
+  request.format = 'json';
+  console.log(request);
+  axios.get('http://nominatim.openstreetmap.org/search', {
+    params: request,
+  }).then((response) => {
+    const data = response.data.shift();
+    console.log(data);
+    res.json(data);
+  }).catch((error) => {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      console.log(error.request);
+    } else {
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+    next(error);
+  });
+};
+
 exports.get_place_tubes = function(req, res, next) {
   //find the place
   axios.get('http://nominatim.openstreetmap.org/search', {
@@ -154,7 +192,7 @@ exports.get_youtube_top = function(req, res, next) {
         return next(err);
       }
       let serialized = [];
-      for (let i = 0; i<record.items.length; i++) {
+      for (let i = 0; i < record.items.length; i++) {
         serialized.push(serializer.initFromYoutube(record.items[i]));
       }
       res.json(serialized);
