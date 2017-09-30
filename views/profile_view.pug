@@ -5,22 +5,22 @@ block append styles
     link(rel='stylesheet' href='/stylesheets/profile.css')
 
 block content
-    div.jumbotron
+    div.wrapper
         div.container.text-center
-            h1(class="display-3")= profile.username
+            h1.display-3.mb-3= profile.username
             h2(class="display-5")
                 i.fa.fa-map-marker.mr-1
                 | #{profile.place}
             div.d-flex.justify-content-center
                 if videos
                     div#usermap
-    if videos
-        div.container
-            h2 Uploaded videos
-            br
-            div.card-deck
-                each video in videos
-                    +videocard(video)
+        if videos
+            div.container.mt-5
+                h2 Uploaded videos
+                br
+                div.card-deck
+                    each video in videos
+                        +videocard(video)
 
 block append scripts
     script.
