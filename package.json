@@ -1,27 +1,30 @@
 {
-  "name": "placetube",
-  "version": "0.1.1",
+  "name": "theplacetube",
+  "version": "0.1.2",
   "description": "Videos on a map",
   "scripts": {
     "start": "node ./bin/www",
     "test": "snyk test",
     "devstart": "set DEBUG=placetube:* & nodemon --debug ./bin/www"
   },
-  "repository": "https://github.com/florianajir/placetube.git",
+  "repository": "https://github.com/florianajir/theplacetube.git",
   "keywords": [
+    "theplacetube",
     "video",
     "map",
     "geolocation",
     "geolocated",
     "share",
-    "placetube"
+    "social",
+    "promote",
+    "influencers"
   ],
   "author": "florianajir",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/florianajir/placetube/issues"
+    "url": "https://github.com/florianajir/theplacetube/issues"
   },
-  "homepage": "https://github.com/florianajir/placetube#readme",
+  "homepage": "https://github.com/florianajir/theplacetube#readme",
   "dependencies": {
     "axios": "^0.16.2",
     "bcrypt": "~1.0.3",
