@@ -21,10 +21,21 @@ block content
                             span.input-group-btn
                                 button#geolocate.btn.btn-outline-secondary(type="button" onclick="getLocation")
                                     i.fa.fa-location-arrow
-                            input#place.form-control(placeholder="Search place" name='search' type="search")
+                            input#place.form-control(placeholder="Search place" name='search' type="search" value=country)
                             span.input-group-btn
                                 button.btn.btn-primary(type="submit")
                                     i.fa.fa-search
+                        div.form-inline
+                            label(for="radius") Radius
+                            input#radius.form-control(type="range" min="10" max="1000000" value="1000000" name="radius")
+                        div.form-inline
+                            label(for="q") Search
+                            input#q.form-control(type="text" name="q")
+                        div.form-inline
+                            label(for="videoCategoryId") Category
+                            select#videoCategoryId.form-control(name="videoCategoryId")
+                              option
+
                 div#videolist-container
                     div#videolist-list.list-group
                         each video in videos
@@ -47,7 +58,7 @@ block content
                                     h5.h6.videolist-title= video.title
                                     h6.videolist-author= video.publisher.username
                                 span.badge.badge-warning.float-right.mb-auto
-                                  i.fa.fa-star(title='Community video')
+                                    i.fa.fa-star(title='Community video')
 
 block append scripts
     script.
@@ -55,6 +66,8 @@ block append scripts
       var markers = [];
       var circle;
       var map;
+      var mapboxApiToken = "#{mapboxApiToken}";
+      var radius;
       initMap();
       initMarkers();
 
@@ -136,15 +149,16 @@ block append scripts
               id: 'mapbox.streets'
             }
         ).addTo(map);
-
+        L.MakiMarkers.accessToken = mapboxApiToken;
         initMarkers();
       }
 
       function youtubeSearchArea(map) {
         const MAX_RADIUS = 1000000;
         var bounds = map.getBounds(),
-            center = map.getCenter(),
-            radius = Math.min(
+            center = map.getCenter();
+
+        radius = Math.min(
                 MAX_RADIUS,
                 map.distance(bounds.getNorthWest(), bounds.getNorthEast()) / 2,
                 map.distance(bounds.getNorthWest(), bounds.getSouthWest()) / 2
@@ -166,12 +180,10 @@ block append scripts
             }
             circle = L.circle(center, radius);
             circle.addTo(map);
-
             refreshVideoList(data, true);
             initMarkers();
           });
         }
-
       }
 
       function initMarkers() {
@@ -181,10 +193,15 @@ block append scripts
         markers = [];
         $(".videolist-media").each(function() {
           var that = $(this);
+          var iconlabel = $(this).attr("data-icon") ? $(this).attr('data-icon') : "star";
+          var color = $(this).hasClass("premiumvid") ? '#ffc107' : '#fe0000';
+          var size = $(this).hasClass("premiumvid") ? 'm' : 's';
+          var icon = L.MakiMarkers.icon({icon: iconlabel, color: color, size: size});
           var marker = L.marker(
               [$(this).attr('data-latitude'), $(this).attr('data-longitude')],
               {
-                title: $(this).attr('data-title')
+                title: $(this).attr('data-title'),
+                icon: icon
               }
           );
           marker.on('click', function() {
@@ -216,6 +233,7 @@ block append scripts
             "data-title": video.title,
             "data-description": video.description,
             "data-tags": video.tags,
+            "data-icon": video.icon,
             "data-publisher": video.publisher.username,
             "data-timeago": timeago,
             "href": "/videos/" + video._id
@@ -239,7 +257,7 @@ block append scripts
           media.append(body);
           if (!youtube) {
             media.append(
-               $("<span class='badge badge-warning float-right mb-auto'/>").html("<i class='fa fa-star' title='Community video' />")
+                $("<span class='badge badge-warning float-right mb-auto'/>").html("<i class='fa fa-star' title='Community video' />")
             )
           }
           $('#videolist-list').append(media);

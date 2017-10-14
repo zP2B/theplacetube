@@ -322,3 +322,7 @@ img#profileAvatar {
         transform: rotate(360deg);
     }
 }
+
+.premiumvid .badge {
+    color: white;
+}

@@ -1,3 +1,4 @@
 {
-  "mongodb_uri": "mongodb://localhost/placetube"
+  "mongodb_uri": "mongodb://localhost/placetube",
+  "mapbox_api_token": ""
 }

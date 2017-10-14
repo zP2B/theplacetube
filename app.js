@@ -9,7 +9,6 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const nconf = require('nconf');
-const fs = require('fs');
 const util = require('util');
 //security middleware
 const helmet = require('helmet');
@@ -23,7 +22,7 @@ const ajax = require('./routes/ajax');
 nconf
     .argv()
     .env()
-    .file({ file: './config.json' });
+    .file({file: './config.json'});
 
 // Use native Node promises
 mongoose.Promise = global.Promise;
@@ -49,6 +48,7 @@ app.locals.inspect = util.inspect;
 app.locals._ = require('underscore');
 app.locals._.str = require('underscore.string');
 app.locals.moment = require('moment');
+
 app.locals.videoDescHelper = function(text) {
   return text.replace(/(?:\r\n|\r|\n)/g, '<br />');
 };
@@ -83,6 +83,8 @@ app.use('/font-awesome', express.static(__dirname + '/node_modules/font-awesome'
 app.use('/open-iconic', express.static(__dirname + '/node_modules/open-iconic'));
 app.use('/webcomponentsjs', express.static(__dirname + '/node_modules/webcomponentsjs'));
 app.use('/get-youtube-id', express.static(__dirname + '/node_modules/get-youtube-id'));
+app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
+app.use('/leaflet-makimarkers', express.static(__dirname + '/node_modules/leaflet-makimarkers'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 app.use(function(req, res, next) {
@@ -90,6 +92,7 @@ app.use(function(req, res, next) {
   res.locals.user = req.session.user;
   res.locals.baseUrl = req.protocol + '://' + req.get('host');
   res.locals.currentUrl = res.locals.baseUrl + req.originalUrl;
+  res.locals.mapboxApiToken = nconf.get('mapbox_api_token');
   next();
 });
 
@@ -98,12 +101,6 @@ app.use('/users', users);
 app.use('/videos', videos);
 app.use('/ajax', ajax);
 
-// Set Content-Type for all responses for these routes
-// app.use((req, res, next) => {
-//   res.set('Content-Type', 'text/html');
-//   next();
-// });
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   let err = new Error('Not Found');
@@ -111,19 +108,10 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-function logErrors(err, next) {
-  console.error(err.stack);
-  next(err);
-}
-
-app.use(logErrors);// error handler
-
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use(function(err, req, res) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  logErrors(err, next);
-  // render the error page
+  console.error(err.stack);
   res.status(err.status || 500);
   res.render('error');
 });

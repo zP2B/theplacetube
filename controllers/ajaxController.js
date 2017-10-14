@@ -109,7 +109,6 @@ exports.get_youtube_details = function(req, res) {
 };
 
 exports.get_youtube_search = function(req, res) {
-  console.log(req.query.search);
   youtube.search.list({
     auth: config.google.api_key,
     part: 'snippet',
@@ -130,7 +129,6 @@ exports.get_youtube_search = function(req, res) {
     const identifiers = list.items.map(function(elem) {
       return elem.id.videoId;
     });
-    console.log(identifiers);
     youtube.videos.list({
       auth: config.google.api_key,
       id: identifiers.join(','),
@@ -144,48 +142,40 @@ exports.get_youtube_search = function(req, res) {
 };
 
 exports.get_youtube_top = function(req, res, next) {
-  youtube.search.list({
+  let params = {
     auth: config.google.api_key,
     maxResults: '20',
     part: 'snippet',
     // chart: 'mostPopular',
     type: 'video',
-    // eventType: 'live', //completed
     location: req.query.latitude + ',' + req.query.longitude,
     locationRadius: Number(req.query.radius) >= 1000000 ? '1000km' : Number(req.query.radius).toFixed() + 'm',
     order: 'viewCount',
-    // q: 'live',
     fields: 'items(id(videoId))',
-    // regionCode: 'fr'
-    // videoCategoryId
-  }, function(err, record) {
+  };
+  if (req.query.q) {
+    params.q = req.query.q;
+  }
+  if (req.query.eventType) {
+    //assert req.query.eventType === 'live' || 'completed'
+    params.eventType = req.query.eventType;
+  }
+  if (req.query.videoCategoryId) {
+    params.videoCategoryId = req.query.videoCategoryId;
+  }
+  youtube.search.list(params, function(err, record) {
     if (err) {
       console.error('youtube.search.list failed');
       return next(err);
     }
-    // return res.json(record);
-    // console.log(record);
     let videoId = [];
     for (let i = 0; i < record.items.length; i++) {
       videoId.push(record.items[i].id.videoId);
     }
-    // console.log(videoId);
     youtube.videos.list({
       auth: config.google.api_key,
       part: 'recordingDetails,snippet',
-      id: videoId.join(','),
-      // chart: 'mostPopular',
-      // myRating:'like',
-      // type: 'video',
-
-      // eventType: 'live', //completed
-      // location: '('+req.body.latitude+','+req.body.longitude+')',
-      // locationRadius: Number(req.body.radius).toFixed() + 'm',
-      // order: 'viewCount',
-      // q: 'viral',
-      // fields: ''
-      // regionCode: 'fr'
-      // videoCategoryId
+      id: videoId.join(',')
     }, function(err, record) {
       if (err) {
         console.error('youtube.videos.list failed');
@@ -197,7 +187,5 @@ exports.get_youtube_top = function(req, res, next) {
       }
       res.json(serialized);
     });
-    // res.json(record);
-
   });
 };
