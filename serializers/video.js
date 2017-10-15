@@ -7,7 +7,6 @@ const categoryIcons = {
   17: 'pitch',
   18: 'cinema',
   19: 'suitcase',
-  20: 'gaming',
   21: 'circle',
   22: 'circle-stroked',
   23: 'theatre',
