@@ -267,7 +267,11 @@ $(document).ready(function() {
       disableGeoloc();
       navigator.geolocation.getCurrentPosition(function(position) {
         reverseGeocoding(position.coords.latitude, position.coords.longitude, function(address) {
-          var location = [address.suburb, address.town, address.state, address.country].filter(String).join(', ');
+          var location = [address.suburb, address.town, address.state, address.country]
+              .filter(function(element){
+                return element !== undefined;
+              })
+              .join(', ');
           $('#place').val(location);
           enableGeoloc();
           $('#search').trigger('submit');
