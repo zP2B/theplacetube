@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const video_controller = require('../controllers/videoController');
+const video_controller = require('../controllers/video-controller');
 
 router.get('/add', video_controller.video_add_get);
 router.post('/add', video_controller.video_add_post);

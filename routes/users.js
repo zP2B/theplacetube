@@ -2,8 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const upload = multer({dest: 'public/uploads/'});
 const router = express.Router();
-const auth_controller = require('../controllers/authController');
-const profile_controller = require('../controllers/profileController');
+const auth_controller = require('../controllers/auth-controller');
+const profile_controller = require('../controllers/profile-controller');
 
 router.get('/profile/:username', profile_controller.user_view_get);
 router.get('/profile/:username/edit', profile_controller.user_edit_get);

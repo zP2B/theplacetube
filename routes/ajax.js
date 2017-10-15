@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ajaxController = require('../controllers/ajaxController');
+const ajaxController = require('../controllers/ajax-controller');
 
 /* GET home page. */
 router.get('/youtube/details/:id', ajaxController.get_youtube_details);
