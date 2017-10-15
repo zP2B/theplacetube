@@ -18,7 +18,6 @@ exports.user_view_get = function(req, res, next) {
               next(err);
               return;
             }
-            console.log(videos);
             res.render('profile_view', {
               title: 'Profile of ' + user.username,
               profile: user,

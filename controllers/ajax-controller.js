@@ -1,9 +1,14 @@
-const config = require('../config');
+const nconf = require('nconf');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
 const Video = require('../models/video');
 const axios = require('axios');
 const serializer = require('../serializers/video');
+//load config
+nconf
+    .argv()
+    .env()
+    .file({file: '../config.json'});
 
 exports.get_place_coordinates = function(req, res, next) {
   let request = {};
@@ -19,12 +24,10 @@ exports.get_place_coordinates = function(req, res, next) {
     request.q = req.query.place;
   }
   request.format = 'json';
-  console.log(request);
   axios.get('http://nominatim.openstreetmap.org/search', {
     params: request,
   }).then((response) => {
     const data = response.data.shift();
-    console.log(data);
     res.json(data);
   }).catch((error) => {
     if (error.response) {
@@ -52,7 +55,6 @@ exports.get_place_tubes = function(req, res, next) {
     },
   }).then((response) => {
     const data = response.data.shift();
-    console.log(Number(data.boundingbox[2]) + '/' + Number(data.boundingbox[0]) + '/' + Number(data.boundingbox[3]) + '/' + Number(data.boundingbox[1]));
     Video.find()
         .withinBounds(Number(data.boundingbox[2]), Number(data.boundingbox[0]), Number(data.boundingbox[3]), Number(data.boundingbox[1]))
         .sort({date: -1})
@@ -93,14 +95,14 @@ exports.get_bounds_tubes = function(req, res, next) {
           next(err);
           return;
         }
-        console.log(videos);
         res.json(videos);
       });
 };
 
 exports.get_youtube_details = function(req, res) {
+
   youtube.videos.list({
-    auth: config.google.api_key,
+    auth: nconf.get('google_api_key'),
     id: req.params.id,
     part: 'recordingDetails,snippet',
   }, function(err, record) {
@@ -110,7 +112,7 @@ exports.get_youtube_details = function(req, res) {
 
 exports.get_youtube_search = function(req, res) {
   youtube.search.list({
-    auth: config.google.api_key,
+    auth: nconf.get('google_api_key'),
     part: 'snippet',
     // location: '(' + req.params.latitude + ',' + req.params.longitude + ')',
     // locationRadius: '50km',
@@ -125,12 +127,11 @@ exports.get_youtube_search = function(req, res) {
     safeSearch: 'none' //'strict' || 'moderate'
   }, function(err, list) {
     console.error(err);
-    // console.log(list);
     const identifiers = list.items.map(function(elem) {
       return elem.id.videoId;
     });
     youtube.videos.list({
-      auth: config.google.api_key,
+      auth: nconf.get('google_api_key'),
       id: identifiers.join(','),
       part: 'recordingDetails,snippet',
     }, function(err, list) {
@@ -143,7 +144,7 @@ exports.get_youtube_search = function(req, res) {
 
 exports.get_youtube_top = function(req, res, next) {
   let params = {
-    auth: config.google.api_key,
+    auth: nconf.get('google_api_key'),
     maxResults: '20',
     part: 'snippet',
     // chart: 'mostPopular',
@@ -173,7 +174,7 @@ exports.get_youtube_top = function(req, res, next) {
       videoId.push(record.items[i].id.videoId);
     }
     youtube.videos.list({
-      auth: config.google.api_key,
+      auth: nconf.get('google_api_key'),
       part: 'recordingDetails,snippet',
       id: videoId.join(',')
     }, function(err, record) {
