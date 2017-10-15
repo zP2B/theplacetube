@@ -8,7 +8,7 @@ $(document).ready(function() {
   initMap();
   initMarkers();
 
-  $('#geolocate').on('click', getLocation());
+  $('#geolocate').on('click', getLocation);
   $('#search').on('submit', function(event) {
     // process the form
     $.ajax({
@@ -321,7 +321,7 @@ $(document).ready(function() {
   }
 
   function reverseGeocoding(lat, lon, callback) {
-    var requestURL = 'http://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=' + lat + '&lon=' + lon;
+    var requestURL = 'https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=' + lat + '&lon=' + lon;
     var request = new XMLHttpRequest();
     request.open('GET', requestURL);
     request.responseType = 'json';
