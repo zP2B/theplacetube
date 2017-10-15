@@ -283,7 +283,7 @@ block append scripts
       }
 
       function reverseGeocoding(lat, lon, callback) {
-        var requestURL = "http://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=" + lat + "&lon=" + lon;
+        var requestURL = "https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=" + lat + "&lon=" + lon;
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
         request.responseType = 'json';
