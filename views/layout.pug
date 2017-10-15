@@ -7,7 +7,7 @@ html
         link(rel="icon" href="/favicon.png" sizes="32x32" type="image/png")
         link(rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml")
         //script(src="bower_components/webcomponentsjs/webcomponents-loader.js")
-        link(rel="import" href="/webcomponents/youtube-embed.html")
+        //link(rel="import" href="/webcomponents/youtube-embed.html")
         //og
         meta(property="og:title" content=title)
         meta(property="og:type" content=(video ? "video" : "website"))
@@ -15,7 +15,7 @@ html
         meta(property="og:url" content=currentUrl)
         meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : baseUrl + "/favicon.svg"))
         meta(property="og:site_name" content="PlaceTube")
-        //meta(property="og:locale" content="en")
+        meta(property="og:locale" content="en")
         if video
             meta(property="og:video" content="https://www.youtube.com/watch?v=" + video.youtubeId)
 
