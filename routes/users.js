@@ -14,5 +14,6 @@ router.post('/login', auth_controller.user_login_post);
 router.get('/logout', auth_controller.user_logout_get);
 router.get('/join', auth_controller.user_join_get);
 router.post('/join', auth_controller.user_join_post);
+router.get('/join/success', auth_controller.user_join_success);
 
 module.exports = router;

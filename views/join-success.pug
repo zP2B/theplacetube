@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    div.alert.alert-success.fill.text-center
+        h1.mb-3 Congratulations!
+        p
+            i.fa.fa-check.mr-2
+            strong You are now a premium member of the club
+        p.
+            You are now able to post promoted videos.
+            Promoted videos will be shown on the top of the search list, increasing the influence.
+        div
+            a.btn.btn-success.btn-lg.btn-block(href='/')
+                i.fa.fa-home.mr-2
+                | Back to home
+            a.btn.btn-primary.btn-lg.btn-block(href='/videos/add/')
+                i.fa.fa-share.mr-2
+                | Share a video

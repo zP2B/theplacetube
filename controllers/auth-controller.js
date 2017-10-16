@@ -34,6 +34,10 @@ exports.user_join_get = function(req, res) {
   res.render('join');
 };
 
+exports.user_join_success = function(req, res) {
+  res.render('join-success');
+};
+
 exports.user_join_post = function(req, res, next) {
   //Check that the name field is not empty
   req.check('username')
@@ -101,7 +105,7 @@ exports.user_join_post = function(req, res, next) {
                   } else {
                     req.session.userId = user._id;
                     req.session.user = user;
-                    return res.redirect('/users/profile/' + user.username);
+                    return res.redirect('/users/join/success');
                   }
                 });
           }
