@@ -104,6 +104,8 @@ block content
 
             div.col-12.col-md-6
                 div#preview.card.mt-3.d-none
+                    div.embed-responsive.embed-responsive-16by9
+                        div#player.embed-responsive-item
                     div.loading
                     div.card-body
                         h5#titlePreview.card-title
@@ -119,17 +121,26 @@ block content
 block append scripts
     script(src='/get-youtube-id/index.js')
     script.
-      $(document).ready(function() {
-        if ($('#youtubeId').val()) {
-          $('#youtubeId').trigger('keyup');
-        }
-      });
+      //Events listenenrs
       $('#youtubeId').on('keyup', videoListener);
       $('#place, #city, #state, #country')
           .on('keyup change', refreshLocationPreview)
           .on('change', geocode);
       $('#description, #title').on('keyup change', refreshTextPreview);
       $('#tags').on('keyup change', refreshTagsPreview);
+
+      // Load youtube IFrame Player API code asynchronously
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+
+      function onYouTubePlayerAPIReady() {
+        if ($('#youtubeId').val()) {
+          $('#youtubeId').trigger('keyup');
+        }
+      }
 
       function geocode() {
         var requestURL = location.origin + "/ajax/geocode";
@@ -209,7 +220,7 @@ block append scripts
       }
 
       function removePreview() {
-        $('#embedPreview').remove();
+        player.destroy();
         $('#preview').addClass('d-none');
       }
 
@@ -225,13 +236,10 @@ block append scripts
       }
 
       function updateVideoPreview(youtubeId) {
-        var embed = $('<youtube-embed id="embedPreview" embed="' + youtubeId + '" class="card-img-top"/>');
-        if ($('#embedPreview').length) {
-          $('#embedPreview').replaceWith(embed);
-        } else {
-          $('#preview').removeClass('d-none').prepend(embed);
-
-        }
+        $('#preview').removeClass('d-none');
+        player = new YT.Player('player', {
+          videoId: youtubeId
+        });
       }
 
       function populateFormFromVideoTags(video) {
