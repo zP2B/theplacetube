@@ -13,7 +13,7 @@ exports.video_view_get = function(req, res, next) {
     }
     res.render('video_view', {
       video: video,
-      title: video.title,
+      title: video.title
     });
   });
 };
@@ -59,7 +59,16 @@ exports.video_add_post = function(req, res, next) {
     } else {
       Video.create(video, function(error) {
         if (error) {
-          next(error);
+          // Duplicate record
+          if (error.name === 'MongoError' && error.code === 11000) {
+            return res.render('video_add', {
+              title: 'Add video', video: video, errors: [
+                {msg: 'This youtube video already exist in the database!'}
+              ]
+            });
+          } else {
+            return next(error);
+          }
         } else {
           return res.redirect('/users/profile/' + req.session.user.username);
         }
