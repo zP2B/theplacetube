@@ -65,22 +65,24 @@ exports.user_join_post = function(req, res, next) {
   let user = new User({
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password,
+    password: req.body.password
   });
   let errors = req.validationErrors(true);
   User.findOne({username: req.body.username}, function(err, record) {
     if (record !== null) {
+      errors = {};
       errors.username = {
         msg: 'This username is already in use',
-        value: req.body.username,
+        value: req.body.username
       };
     }
 
     User.findOne({email: req.body.email}, function(err, record) {
       if (record !== null) {
+        errors = {};
         errors.email = {
           msg: 'This email is already in use',
-          value: req.body.email,
+          value: req.body.email
         };
       }
 
@@ -88,7 +90,7 @@ exports.user_join_post = function(req, res, next) {
         console.log('validation errors');
         console.log(errors);
         //If there are errors render the form again, passing the previously entered values and errors
-        res.render('join', {user: user, errors: errors});
+        return res.render('join', {user: user, errors: errors});
       }
       else {
         User.create(user, function(error) {
