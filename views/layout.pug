@@ -37,3 +37,10 @@ html
             script(src="/leaflet/leaflet.js")
             script(src="/leaflet-makimarkers/Leaflet.MakiMarkers.js")
             script(src="/moment/min/moment.min.js")
+            // Tracking with Google Analytics
+            script(async src="https://www.googletagmanager.com/gtag/js?id=UA-108243890-1")
+            script.
+              window.dataLayer = window.dataLayer || [];
+              function gtag() {dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'UA-108243890-1');
