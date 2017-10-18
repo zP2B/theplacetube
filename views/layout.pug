@@ -3,22 +3,19 @@ html
     head
         meta(charset="utf-8")
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        meta(property="og:title" content="The Place Tube")
+        meta(property="og:type" content=(video ? "video" : "website"))
+        meta(property="og:description" content="Geolocated video search service")
+        meta(property="og:url" content="https://theplacetube.com")
+        meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : "https://theplacetube.com/og-image.png"))
+        meta(property="og:locale" content="en")
+
         link(rel="icon" href="/favicon.ico")
         link(rel="icon" href="/favicon.png" sizes="32x32" type="image/png")
         link(rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml")
-        //script(src="bower_components/webcomponentsjs/webcomponents-loader.js")
-        //link(rel="import" href="/webcomponents/youtube-embed.html")
-        //og
-        meta(property="og:title" content=title)
-        meta(property="og:type" content=(video ? "video" : "website"))
-        meta(property="og:description" content="Explore the world like a drone, or share your drone videos to the community")
-        meta(property="og:url" content=currentUrl)
-        meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : baseUrl + "/favicon.svg"))
-        meta(property="og:site_name" content="PlaceTube")
-        meta(property="og:locale" content="en")
+
         if video
             meta(property="og:video" content="https://www.youtube.com/watch?v=" + video.youtubeId)
-
         block styles
             link(rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css")
             link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" data-require="fontawesome@*")
@@ -28,7 +25,6 @@ html
 
         title The Place Tube #{title}
     body
-        //header
         include includes/navbar.pug
         main.fill
             block content
