@@ -24,7 +24,6 @@ router.get('/', (req, res, next) => {
           return;
         }
         return res.render('index', {
-          title: 'the place to be',
           videos: videos,
           country: country,
         });
