@@ -14,7 +14,7 @@ exports.user_login_post = function(req, res, next) {
         }
         req.session.userId = user._id;
         req.session.user = user;
-        res.redirect('/users/profile/' + user.username);
+        return res.redirect('/'); // res.redirect('/users/profile/' + user.username);
       });
 };
 
