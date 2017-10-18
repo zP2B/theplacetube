@@ -1,21 +1,28 @@
+const mongoose = require('mongoose');
 const Video = require('../models/video');
 const getYouTubeID = require('get-youtube-id');
 
 exports.video_view_get = function(req, res, next) {
-  Video.findOne({'_id': '' + req.params.videoId}, function(err, video) {
-    if (err) {
-      return next(err);
-    }
-    if (!video) {
-      let err = new Error('Video not found.');
-      err.status = 404;
-      return next(err);
-    }
-    res.render('video_view', {
-      video: video,
-      title: video.title
+  if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
+    Video.findOne({'_id': '' + req.params.videoId}, function(err, video) {
+      if (err) {
+        return next(err);
+      }
+      if (!video) {
+        let err = new Error('Video not found.');
+        err.status = 404;
+        return next(err);
+      }
+      return res.render('video_view', {
+        video: video,
+        title: video.title
+      });
     });
-  });
+  } else {
+    let err = new Error('Video not found.');
+    err.status = 404;
+    return next(err);
+  }
 };
 
 exports.video_add_get = function(req, res, next) {
