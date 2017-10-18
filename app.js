@@ -116,4 +116,8 @@ app.use(function(err, req, res) {
   res.render('error');
 });
 
+process.on('uncaughtException', function (err) {
+  console.error('Caught exception: ' + err);
+});
+
 module.exports = app;
