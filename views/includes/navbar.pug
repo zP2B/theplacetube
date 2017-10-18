@@ -8,8 +8,6 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
         ul(class='navbar-nav mr-auto')
         ul(class='navbar-nav')
             if userId && user
-                li.nav-item
-                    a.nav-link.btn.btn-success(href='/videos/add') <i class="fa fa-plus"></i>&nbsp;Add video
                 li(class='nav-item dropdown')
                     a#usermenu.nav-link.dropdown-toggle.unselectable(
                     href='/users/profile/' + user.username
@@ -20,13 +18,21 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
                     })
                         i(class='fa fa-user' aria-hidden='true')
                         | &nbsp; #{user.username}
-
                     div(class='dropdown-menu dropdown-menu-right')&attributes({'aria-labelledby': 'usermenu'})
-                        a(class='dropdown-item' href='/users/profile/' + user.username) View my profile
-                        a(class='dropdown-item' href='/users/profile/' + user.username + '/edit') Edit my account
-                        div(class='dropdown-divider')
-                        a(class='dropdown-item' href='/users/logout') Logout&nbsp;
-                            i(class='fa fa-sign-out' aria-hidden='true')
+                        a.dropdown-item(href='/videos/add')
+                            i.fa.fa-share.fa-fw.mr-2
+                            | Share a video
+                        div.dropdown-divider
+                        a.dropdown-item(href='/users/profile/' + user.username)
+                            i.fa.fa-user.fa-fw.mr-2
+                            | View my profile
+                        a.dropdown-item(href='/users/profile/' + user.username + '/edit')
+                            i.fa.fa-edit.fa-fw.mr-2
+                            | Edit my account
+                        div.dropdown-divider
+                        a(class='dropdown-item' href='/users/logout')
+                            i.fa.fa-sign-out.fa-fw.mr-2(aria-hidden='true')
+                            | Logout
             else
                 div(class='btn-toolbar')
                     a(href='/users/login' class='btn btn-sm') Login
