@@ -79,9 +79,6 @@ $(document).ready(function() {
         'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZHJvbmVtYXBpbyIsImEiOiJjajZ0a2U3OGcwczZ6MnJtc2p4Y3F6YjE0In0.kz6URZ6nVfb7dWGE3w_OBA',
         {
           maxZoom: 15,
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-          '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-          'Imagery © <a href="http://mapbox.com">Mapbox</a>',
           id: 'mapbox.streets'
         }
     ).addTo(map);
@@ -162,7 +159,6 @@ $(document).ready(function() {
       var timeago = moment(video.date).fromNow();
       var media = $('<a>').attr({
         'class': 'media video videolist-media list-group-item list-group-item-action',
-        'data-id': video._id,
         'data-youtube-id': video.youtubeId,
         'data-latitude': video.place.location.coordinates[1],
         'data-longitude': video.place.location.coordinates[0],
@@ -171,13 +167,15 @@ $(document).ready(function() {
         'data-tags': video.tags,
         'data-icon': video.icon,
         'data-publisher': video.publisher.username,
-        'data-timeago': timeago,
-        'href': '/videos/' + video._id
+        'data-timeago': timeago
       });
       if (youtube) {
         media.addClass('youtube-media');
+        media.attr('href', 'javascript:void(0);');
       } else {
         media.addClass('premiumvid');
+        media.attr('data-id', video._id);
+        media.attr('href', '/videos/' + video._id);
       }
       var place = [video.place.name, video.place.city, video.place.state, video.place.country].filter(String);
       if (place.length) {
