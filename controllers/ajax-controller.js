@@ -17,7 +17,7 @@ exports.get_place_coordinates = function(req, res, next) {
       'street': req.query.place,
       'city': req.query.city,
       'state': req.query.state,
-      'country': req.query.country,
+      'country': req.query.country
     };
 
   } else {
@@ -25,7 +25,7 @@ exports.get_place_coordinates = function(req, res, next) {
   }
   request.format = 'json';
   axios.get('http://nominatim.openstreetmap.org/search', {
-    params: request,
+    params: request
   }).then((response) => {
     const data = response.data.shift();
     res.json(data);
@@ -51,8 +51,8 @@ exports.get_place_tubes = function(req, res, next) {
   axios.get('http://nominatim.openstreetmap.org/search', {
     params: {
       'q': req.query.search,
-      'format': 'json',
-    },
+      'format': 'json'
+    }
   }).then((response) => {
     const data = response.data.shift();
     Video.find()
@@ -104,12 +104,13 @@ exports.get_youtube_details = function(req, res) {
   youtube.videos.list({
     auth: nconf.get('google_api_key'),
     id: req.params.id,
-    part: 'recordingDetails,snippet',
+    part: 'recordingDetails,snippet'
   }, function(err, record) {
     res.json(record.items.pop());
   });
 };
 
+//unused
 exports.get_youtube_search = function(req, res) {
   youtube.search.list({
     auth: nconf.get('google_api_key'),
@@ -133,7 +134,7 @@ exports.get_youtube_search = function(req, res) {
     youtube.videos.list({
       auth: nconf.get('google_api_key'),
       id: identifiers.join(','),
-      part: 'recordingDetails,snippet',
+      part: 'recordingDetails,snippet'
     }, function(err, list) {
       console.error(err);
       const filtered = list.items.filter(item => item.recordingDetails !== undefined);
@@ -152,7 +153,7 @@ exports.get_youtube_top = function(req, res, next) {
     location: req.query.latitude + ',' + req.query.longitude,
     locationRadius: Number(req.query.radius) >= 1000000 ? '1000km' : Number(req.query.radius).toFixed() + 'm',
     order: 'viewCount',
-    fields: 'items(id(videoId))',
+    fields: 'items(id(videoId))'
   };
   if (req.query.q) {
     params.q = req.query.q;
@@ -182,11 +183,7 @@ exports.get_youtube_top = function(req, res, next) {
         console.error('youtube.videos.list failed');
         return next(err);
       }
-      let serialized = [];
-      for (let i = 0; i < record.items.length; i++) {
-        serialized.push(serializer.initFromYoutube(record.items[i]));
-      }
-      res.json(serialized);
+      res.json(serializer.initFromYoutubeCollection(record));
     });
   });
 };

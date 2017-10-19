@@ -27,7 +27,7 @@ const categoryIcons = {
   38: 'place-of-workship',
   39: 'danger',
   40: 'rocket',
-  41: 'defibrillator',
+  41: 'defibrillator'
 };
 
 function getCategoryIcon(category) {
@@ -35,12 +35,22 @@ function getCategoryIcon(category) {
   return categoryIcons[category] ? categoryIcons[category] : DEFAULT_ICON;
 }
 
+exports.initFromYoutubeCollection = function(records, skipNotLocated = true) {
+  let serialized = [];
+  for (let i = 0; i < records.items.length; i++) {
+    if (!skipNotLocated || (records.items[i].recordingDetails.location.longitude && records.items[i].recordingDetails.location.longitude)) {
+      serialized.push(initFromYoutube(records.items[i]));
+    }
+  }
+
+  return serialized;
+};
+
 /**
- *
  * @param record Search Resource youtube#searchResult
  * @returns {{youtubeId: string, title: string, description: (*|string|description|{type, trim}|string|string), tags: string, place: {name: string, city: string, state: string, country: string, location: {type: string, coordinates: [null,null]}}, publisher: {username: string, place: string, avatar: string}, date: string, owner: boolean}}
  */
-exports.initFromYoutube = function(record) {
+function initFromYoutube(record) {
   assert.equal(record.kind, 'youtube#video', 'Unexpected object in youtube to video serializer');
   return {
     'youtubeId': record.id,
@@ -56,15 +66,15 @@ exports.initFromYoutube = function(record) {
       'country': '',
       'location': {
         'type': 'Point',
-        'coordinates': [record.recordingDetails.location.longitude, record.recordingDetails.location.latitude],
-      },
+        'coordinates': [record.recordingDetails.location.longitude, record.recordingDetails.location.latitude]
+      }
     },
     'publisher': {
-      'username': '',
-      'place': '',
-      'avatar': '',
+      'username': record.snippet.channelTitle
+      //   'place': '',
+      //   'avatar': ''
     },
     'date': record.snippet.publishedAt,
-    'owner': false,
+    'owner': false
   };
-};
+}
