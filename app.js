@@ -28,7 +28,7 @@ nconf
 mongoose.Promise = global.Promise;
 // connect to MongoDB
 mongoose
-    .connect(nconf.get('mongodb_uri'))
+    .connect(nconf.get('mongodb_uri'), { useMongoClient: true })
     .catch((err) => console.error(err));
 
 const app = express();
