@@ -87,7 +87,7 @@ app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
 app.use('/leaflet-makimarkers', express.static(__dirname + '/node_modules/leaflet-makimarkers'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.locals.userId = req.session.userId;
   res.locals.user = req.session.user;
   res.locals.baseUrl = req.protocol + '://' + req.get('host');
@@ -102,19 +102,21 @@ app.use('/videos', videos);
 app.use('/ajax', ajax);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   let err = new Error('Not Found');
   err.status = 404;
   return next(err);
 });
 
-app.use(function(err, req, res, next) {
+app.use(errorhandler);
+
+function errorhandler(err, req, res, next) {
   res.locals.message = err.message;
-  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
+  res.locals.error = app.get('env') === 'development' ? err : {};
   console.error(err.stack);
   res.status(err.status || 500);
   res.render('error');
-});
+}
 
 module.exports = app;
 
