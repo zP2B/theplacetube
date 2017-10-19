@@ -40,8 +40,8 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
   store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-  }),
+    mongooseConnection: mongoose.connection
+  })
 }));
 
 app.locals.inspect = util.inspect;
@@ -105,12 +105,12 @@ app.use('/ajax', ajax);
 app.use(function(req, res, next) {
   let err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  return next(err);
 });
 
-app.use(function(err, req, res) {
+app.use(function(err, req, res, next) {
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
   console.error(err.stack);
   res.status(err.status || 500);
   res.render('error');
