@@ -930,7 +930,17 @@ glob@^7.0.5, glob@^7.1.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-google-auth-library@^0.10.0, google-auth-library@~0.10.0:
+google-auth-library@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-0.11.0.tgz#1018444f3f0b62b48757948a0467208559cd2222"
+  dependencies:
+    gtoken "^1.2.1"
+    jws "^3.1.4"
+    lodash.isstring "^4.0.1"
+    lodash.merge "^4.6.0"
+    request "^2.81.0"
+
+google-auth-library@~0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-0.10.0.tgz#6e15babee85fd1dd14d8d128a295b6838d52136e"
   dependencies:
@@ -945,9 +955,9 @@ google-p12-pem@^0.1.0:
   dependencies:
     node-forge "^0.7.1"
 
-googleapis@^21.3.0:
-  version "21.3.0"
-  resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-21.3.0.tgz#043d0276574eb7930a9fa731768d5571eeac11ee"
+googleapis@^22.2.0:
+  version "22.2.0"
+  resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-22.2.0.tgz#fd79c3c26e7e71a4f5a2ec1a7da5fb115d8853d2"
   dependencies:
     async "~2.3.0"
     google-auth-library "~0.10.0"
@@ -1127,11 +1137,9 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-i18n-iso-countries@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/i18n-iso-countries/-/i18n-iso-countries-2.1.1.tgz#5ec55e62a9b2fc71e01527c5fb1fb4b5c22fc77c"
-  dependencies:
-    pad "1.1.0"
+i18n-iso-countries@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/i18n-iso-countries/-/i18n-iso-countries-3.0.0.tgz#fd765dc972ebb69f1224c49322cf2309786acf46"
 
 iconv-lite@0.4.19, iconv-lite@^0.4.13, iconv-lite@^0.4.4:
   version "0.4.19"
@@ -1449,6 +1457,14 @@ lodash.defaults@^4.0.1:
 lodash.defaultsdeep@^4.3.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.0.tgz#bec1024f85b1bd96cbea405b23c14ad6443a6f81"
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+
+lodash.merge@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
 
 lodash.mergewith@^4.3.1:
   version "4.6.0"
@@ -1821,10 +1837,6 @@ package-json@^2.0.0:
     registry-auth-token "^3.0.1"
     registry-url "^3.0.3"
     semver "^5.1.0"
-
-pad@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pad/-/pad-1.1.0.tgz#7a7d185200ebac32f9f12ee756c3a1d087b3190b"
 
 parse-json@^2.1.0, parse-json@^2.2.0:
   version "2.2.0"
