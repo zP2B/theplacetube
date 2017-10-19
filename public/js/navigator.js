@@ -10,6 +10,10 @@ $(document).ready(function() {
 
   $('#geolocate').on('click', getLocation);
   $('#search').on('submit', function(event) {
+    $('#searchIcon')
+        .removeClass('fa-search')
+        .addClass('fa-refresh')
+        .addClass('fa-spin');
     // process the form
     $.ajax({
       type: 'GET',
@@ -18,7 +22,13 @@ $(document).ready(function() {
         'search': $('input[name=search]').val()
       },
       dataType: 'json',
-      encode: true
+      encode: true,
+      complete(jqXHR, textStatus) {
+        $('#searchIcon')
+            .removeClass('fa-refresh')
+            .removeClass('fa-spin')
+            .addClass('fa-search');
+      }
     }).done(function(data) {
       if (data.boundingbox) {
         //listenOnMove = false;
@@ -190,7 +200,11 @@ $(document).ready(function() {
       );
       var body = $('<div class="media-body"/>')
           .append($('<h5 class="h6 videolist-title"/>').text(video.title))
-          .append($('<h6 class="videolist-author mb-0"/>').text(video.publisher.username));
+          .append(
+              $('<div class="row" />')
+                  .append($('<h6 class="videolist-footer col-6 pr-0"/>').text(video.publisher.username))
+                  .append($('<h6 class="videolist-footer text-right col-6 pl-0" />').text(timeago))
+          );
       media.append(body);
       if (!youtube) {
         media.append(
@@ -240,6 +254,9 @@ $(document).ready(function() {
               .append(video.attr('data-place'))
       );
     }
+    metaviewer.append(
+        $('<p class="small"/>').text('Uploaded ' + video.attr('data-timeago')).prepend('<i class="fa fa-clock-o mr-1"/>')
+    );
     metaviewer.append($('<hr/>'));
     metaviewer.append(
         $('<p class="mt-3 small"/>').html(video.attr('data-description').replace(/(?:\r\n|\r|\n)/g, '<br />'))
@@ -266,13 +283,14 @@ $(document).ready(function() {
       navigator.geolocation.getCurrentPosition(function(position) {
         reverseGeocoding(position.coords.latitude, position.coords.longitude, function(address) {
           var location = [address.suburb, address.town, address.state, address.country]
-              .filter(function(element){
+              .filter(function(element) {
                 return element !== undefined;
               })
               .join(', ');
           $('#place').val(location);
-          enableGeoloc();
           $('#search').trigger('submit');
+        }, function() {
+          enableGeoloc();
         });
       }, function showError(error) {
         var message;
@@ -302,7 +320,7 @@ $(document).ready(function() {
             }
           });
         }
-        removeGeoloc();
+        // removeGeoloc();
       });
     } else {
       Notification('Geolocation is not supported by this browser.');
@@ -315,21 +333,35 @@ $(document).ready(function() {
   }
 
   function disableGeoloc() {
-    $('#geolocate').prop('disabled', true).find('>i').addClass('fa-spin');
+    $('#geolocate')
+        .prop('disabled', true)
+        .find('>i')
+        .removeClass('fa-location-arrow')
+        .addClass('fa-spin')
+        .addClass('fa-circle-o-notch')
+    ;
   }
 
   function enableGeoloc() {
-    $('#geolocate').prop('disabled', false).find('>i').removeClass('fa-spin');
+    $('#geolocate').prop('disabled', false)
+        .find('>i')
+        .removeClass('fa-spin')
+        .removeClass('fa-circle-o-notch')
+        .addClass('fa-location-arrow')
+    ;
   }
 
-  function reverseGeocoding(lat, lon, callback) {
+  function reverseGeocoding(lat, lon, success, complete) {
     var requestURL = 'https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=' + lat + '&lon=' + lon;
     var request = new XMLHttpRequest();
     request.open('GET', requestURL);
     request.responseType = 'json';
     request.send();
     request.onload = function() {
-      callback(request.response.address);
+      success(request.response.address);
+    };
+    request.onloadend = function() {
+      complete();
     };
   }
 

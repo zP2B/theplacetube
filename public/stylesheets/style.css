@@ -225,7 +225,7 @@ a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist
     height: 56px;
 }
 
-.videolist-author {
+.videolist-footer {
     display: block;
     text-overflow: ellipsis;
     white-space: nowrap;

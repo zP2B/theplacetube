@@ -24,7 +24,7 @@ block content
                             input#place.form-control(placeholder="Search the place to be" name='search' type="search" value=country)
                             span.input-group-btn
                                 button.btn.btn-primary(type="submit")
-                                    i.fa.fa-search
+                                    i#searchIcon.fa.fa-search.fa-fw
                         //div.form-inline
                         //    label(for="radius") Radius
                         //    input#radius.form-control(type="range" min="10" max="1000000" value="1000000" name="radius")
@@ -56,7 +56,9 @@ block content
                                 img.d-flex.mr-2.img-fluid(src="https://img.youtube.com/vi/" + video.youtubeId + "/hqdefault.jpg" alt=video.title)
                                 div.media-body
                                     h5.h6.videolist-title= video.title
-                                    h6.videolist-author= video.publisher.username
+                                    div.row
+                                        h6.videolist-footer.col-6.pr-0= video.publisher.username
+                                        h6.videolist-footer.col-6.text-right.pl-0= timeago
                                 span.badge.badge-warning.float-right.mb-auto
                                     i.fa.fa-star(title='Community video')
 
