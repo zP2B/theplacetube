@@ -108,6 +108,17 @@ app.use((req, res, next) => {
   return next(err);
 });
 
+app.use(clientErrorHandler);
+
+function clientErrorHandler(err, req, res, next) {
+  if (req.xhr) {
+    console.error(err);
+    res.status(500).send({error: err.message});
+  } else {
+    next(err);
+  }
+}
+
 app.use(errorhandler);
 
 function errorhandler(err, req, res, next) {
