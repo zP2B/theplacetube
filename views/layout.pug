@@ -8,7 +8,10 @@ html
         meta(property="og:type" content=(video ? "video" : "website"))
         meta(property="og:description" content="Geolocated video search service")
         meta(property="og:url" content="https://theplacetube.com")
-        meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : "https://theplacetube.com/og-image.png"))
+        meta(property="og:image" content=(video ? "https://img.youtube.com/vi/" + video.youtubeId + "/default.jpg" : "https://theplacetube.com/img/og-image.png"))
+        meta(property="og:image:type" content="image/png")
+        meta(property="og:image:width" content="1024")
+        meta(property="og:image:height" content="1024")
         meta(property="og:locale" content="en")
 
         link(rel="icon" href="/favicon.ico")
