@@ -19,6 +19,11 @@ const users = require('./routes/users');
 const videos = require('./routes/videos');
 const ajax = require('./routes/ajax');
 
+// TODO remove this nasty error handling
+process.on('uncaughtException', (err) => {
+  console.log('Caught exception: ' + err);
+});
+
 nconf
     .argv()
     .env()
@@ -130,8 +135,3 @@ function errorhandler(err, req, res, next) {
 }
 
 module.exports = app;
-
-// TODO remove this nasty error handling
-process.on('uncaughtException', (err) => {
-  console.error('Caught exception: ' + err);
-});
