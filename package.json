@@ -1,11 +1,12 @@
 {
   "name": "theplacetube",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Videos on a map",
   "scripts": {
+    "forever": "node ./forever.js",
+    "nodemon": "nodemon --debug ./bin/www",
     "start": "node ./bin/www",
-    "test": "snyk test",
-    "devstart": "set DEBUG=theplacetube:* & nodemon --debug ./bin/www"
+    "test": "snyk test"
   },
   "repository": "https://github.com/florianajir/theplacetube.git",
   "keywords": [
@@ -41,6 +42,7 @@
     "express-session": "^1.15.5",
     "express-validator": "^4.1.0",
     "font-awesome": "^4.7.0",
+    "forever-monitor": "^1.7.1",
     "geoip-lite": "^1.2.1",
     "get-youtube-id": "^1.0.0",
     "google-auth-library": "^0.11.0",
