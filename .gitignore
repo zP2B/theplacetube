@@ -3,3 +3,4 @@ npm-debug.log
 config.json
 public/uploads/*
 .idea
+logs/*.out
