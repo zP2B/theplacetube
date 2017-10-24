@@ -202,8 +202,8 @@ $(document).ready(function() {
           .append($('<h5 class="h6 videolist-title"/>').text(video.title))
           .append(
               $('<div class="row" />')
-                  .append($('<h6 class="videolist-footer col-6 pr-0"/>').text(video.publisher.username))
-                  .append($('<h6 class="videolist-footer text-right col-6 pl-0" />').text(timeago))
+                  .append($('<h6 class="videolist-footer col-7 pr-0"/>').text(video.publisher.username))
+                  .append($('<h6 class="videolist-footer text-right col-5 pl-0" />').text(timeago))
           );
       media.append(body);
       if (!youtube) {

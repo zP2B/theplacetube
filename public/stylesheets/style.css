@@ -237,6 +237,7 @@ a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist
     line-height: 1rem;
     text-transform: none;
     margin-bottom: 0;
+    max-width: 220px;
 }
 
 .videolist-media {
