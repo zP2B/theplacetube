@@ -35,8 +35,8 @@ router.get('/', (req, res, next) => {
               ),
               1000000);
           youtubesearch.searchList(geocode.geometry.location, radius, function(err, result) {
-            console.log('youtube search list');
             if (err) {
+              console.log('youtube search list error');
               throw err;
             }
             let videoId = [];
@@ -44,15 +44,15 @@ router.get('/', (req, res, next) => {
               videoId.push(result.items[i].id.videoId);
             }
             youtubesearch.videosList(videoId.join(','), function(err, result) {
-              console.log('youtube videos list');
               if (err) {
+                console.log('youtube videos list error');
                 throw err;
               }
               return res.render('index', {
                 // videos: videos,
                 videos: serializer.initFromYoutubeCollection(result),
                 place: geocode.formatted_address,
-                geocode: geocode
+                geocode: JSON.stringify(geocode)
               });
             });
           });
