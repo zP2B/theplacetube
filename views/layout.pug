@@ -31,6 +31,7 @@ html
         noscript
             iframe(src="https://www.googletagmanager.com/ns.html?id=GTM-58ZHZJH" height="0" width="0" style="display:none;visibility:hidden")
         include includes/navbar.pug
+        include includes/alert.pug
         main.fill
             block content
         footer.fixed-bottom
@@ -42,3 +43,4 @@ html
             script(src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="")
             script(src="/leaflet-makimarkers/Leaflet.MakiMarkers.js")
             script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js" integrity="sha256-zG8v+NWiZxmjNi+CvUYnZwKtHzFtdO8cAKUIdB8+U9I=" crossorigin="anonymous")
+            script(src="/js/alert.js")
