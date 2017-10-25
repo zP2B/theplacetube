@@ -21,7 +21,7 @@ block content
                             span.input-group-btn
                                 button#geolocate.btn.btn-outline-secondary(type="button")
                                     i.fa.fa-location-arrow
-                            input#place.form-control(placeholder="Search the place to be" name='search' type="search" value=country)
+                            input#place.form-control(placeholder="Search the place to be" name='search' type="search" value=place)
                             span.input-group-btn
                                 button.btn.btn-primary(type="submit")
                                     i#searchIcon.fa.fa-search.fa-fw
@@ -40,7 +40,7 @@ block content
                     div#videolist-list.list-group
                         each video in videos
                             - var timeago = moment(video.date).fromNow()
-                            a.media.video.videolist-media.list-group-item.premiumvid.list-group-item-action&attributes({
+                            a.media.video.videolist-media.list-group-item.list-group-item-action&attributes({
                               "data-id": video._id,
                               "data-youtube-id": video.youtubeId,
                               "data-latitude": video.place.location.coordinates[1],
@@ -59,8 +59,6 @@ block content
                                     div.row
                                         h6.videolist-footer.col-7.pr-0= video.publisher.username
                                         h6.videolist-footer.col-5.text-right.pl-0= timeago
-                                span.badge.badge-warning.float-right.mb-auto
-                                    i.fa.fa-star(title='Community video')
 
 block append scripts
     script.
