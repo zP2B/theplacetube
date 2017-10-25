@@ -23,44 +23,44 @@ router.get('/', (req, res, next) => {
   }
   //find city bounds
   let geocoding = googlemaps.geocode(null, city, country_iso);
-  geocoding
-      .then((response) => {
-        let geocode = response.json.results.pop();
-        let radius = Math.min(
-            Math.max(
-                geolib.getDistanceBetween(geocode.geometry.location, geocode.geometry.viewport.southwest),
-                geolib.getDistanceBetween(geocode.geometry.location, geocode.geometry.viewport.northeast)
-            ),
-            1000000);
-        youtubesearch.searchList(geocode.geometry.location, radius, function(err, result) {
-          console.log('youtube search list');
-          if (err) {
-            console.log(err);
-            return next(err);
-          }
-          let videoId = [];
-          for (let i = 0; i < result.items.length; i++) {
-            videoId.push(result.items[i].id.videoId);
-          }
-          youtubesearch.videosList(videoId.join(','), function(err, result) {
-            console.log('youtube videos list');
+  let geocode;
+  try {
+    geocoding
+        .then((result) => {
+          geocode = result.json.results.pop();
+          let radius = Math.min(
+              Math.max(
+                  geolib.getDistanceBetween(geocode.geometry.location, geocode.geometry.viewport.southwest),
+                  geolib.getDistanceBetween(geocode.geometry.location, geocode.geometry.viewport.northeast)
+              ),
+              1000000);
+          youtubesearch.searchList(geocode.geometry.location, radius, function(err, result) {
+            console.log('youtube search list');
             if (err) {
-              console.log(err);
-              return next(err);
+              throw err;
             }
-            return res.render('index', {
-              // videos: videos,
-              videos: serializer.initFromYoutubeCollection(result),
-              place: geocode.formatted_address
+            let videoId = [];
+            for (let i = 0; i < result.items.length; i++) {
+              videoId.push(result.items[i].id.videoId);
+            }
+            youtubesearch.videosList(videoId.join(','), function(err, result) {
+              console.log('youtube videos list');
+              if (err) {
+                throw err;
+              }
+              return res.render('index', {
+                // videos: videos,
+                videos: serializer.initFromYoutubeCollection(result),
+                place: geocode.formatted_address,
+                geocode: geocode
+              });
             });
           });
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        return next(err);
-      });
-
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
   // Video
   //     .find()
   //     .sort({'date': -1})
