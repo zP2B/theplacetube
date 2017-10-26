@@ -115,15 +115,15 @@ input[type=number] {
 
 #videolist-topbar {
     background-color: rgb(238, 238, 238);
-    height: 102px;
+    height: 90px;
     width: 100%;
     position: absolute;
-    padding: 16px 16px 16px;
+    padding: 10px;
     z-index: 2;
 }
 
 #videolist-container {
-    padding-top: 102px;
+    padding-top: 90px;
     height: 100%;
     width: 100%;
     position: absolute;
