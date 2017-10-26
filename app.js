@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -14,10 +16,9 @@ const util = require('util');
 const helmet = require('helmet');
 
 // routes
-const index = require('./routes/index');
-const users = require('./routes/users');
-const videos = require('./routes/videos');
-const ajax = require('./routes/ajax');
+const index = require('./lib/routes/index');
+const users = require('./lib/routes/users');
+// const videos = require('./lib/routes/videos');
 
 // TODO remove this nasty error handling
 process.on('uncaughtException', (err) => {
@@ -69,7 +70,7 @@ app.locals.videoTagsHelper = function(tags) {
   return display;
 };
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/lib/views'));
 app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
@@ -80,17 +81,7 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/js', express.static(__dirname + '/node_modules/popper.js/dist'));
-app.use('/js', express.static(__dirname + '/node_modules/jquery/dist'));
-app.use('/moment', express.static(__dirname + '/node_modules/moment'));
-app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap'));
-app.use('/font-awesome', express.static(__dirname + '/node_modules/font-awesome'));
-app.use('/open-iconic', express.static(__dirname + '/node_modules/open-iconic'));
-app.use('/webcomponentsjs', express.static(__dirname + '/node_modules/webcomponentsjs'));
 app.use('/get-youtube-id', express.static(__dirname + '/node_modules/get-youtube-id'));
-app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
-app.use('/leaflet-makimarkers', express.static(__dirname + '/node_modules/leaflet-makimarkers'));
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 app.use((req, res, next) => {
   res.locals.userId = req.session.userId;
@@ -103,8 +94,7 @@ app.use((req, res, next) => {
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/videos', videos);
-app.use('/ajax', ajax);
+// app.use('/videos', videos);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -117,11 +107,9 @@ app.use(clientErrorHandler);
 
 function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
-    console.error(err);
-    res.status(500).send({error: err.message});
-  } else {
-    next(err);
+    return res.status(500).send({error: err.message});
   }
+  next(err);
 }
 
 app.use(errorhandler);
