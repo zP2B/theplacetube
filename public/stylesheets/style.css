@@ -145,6 +145,15 @@ input[type=number] {
     max-height: 56px;
 }
 
+#videolist-pagination {
+    width: 100%;
+}
+
+#videolist-pagination .pagination {
+    margin-bottom: 0.5em;
+    margin-top: 0.5rem;
+}
+
 #backtomap, #backtolist {
     position: absolute;
     top: 0;

@@ -32,7 +32,11 @@ function initMap() {
     map.fitBounds(resultBounds);
   }
   initAutocomplete();
-  initMarkers();
+  var videos = [];
+  Array.from(document.getElementsByClassName('videolist-media')).forEach(function(element) {
+    videos.push(JSON.parse(element.getAttribute('data-json')));
+  });
+  initMarkers(videos);
   google.maps.event.addListenerOnce(map, 'idle', function() {
     map.addListener('dragend', refreshVideoList);
     map.addListener('zoom_changed', refreshVideoList);
@@ -63,13 +67,8 @@ function initAutocomplete() {
  * Init map markers
  * triggered on load and after populating videolist-medias dom element
  */
-function initMarkers() {
-  if (markers.length) {
-    clearMarkers();
-  }
-
-  Array.from(document.getElementsByClassName('videolist-media')).forEach(function(element) {
-    var data = JSON.parse(element.getAttribute('data-json'));
+function initMarkers(videos) {
+  videos.forEach(function(data) {
     var marker = new google.maps.Marker({
       position: data.location,
       map: map,
@@ -81,7 +80,7 @@ function initMarkers() {
         text: data.icon
       });
     }
-
+    var element = document.querySelector('[data-id="' + data.youtubeId + '"]');
     marker.addListener('click', function(i) {
       $('#videolist-list').animate({
         scrollTop: element.getBoundingClientRect().top + element.parentElement.scrollTop - element.parentElement.getBoundingClientRect().top
@@ -103,37 +102,115 @@ function initMarkers() {
  * refresh videolist
  */
 function refreshVideoList() {
-  $.get(
-      '/refresh',
+  spinSearch();
+  $.getJSON(
+      '/videos.json',
       {
         lat: map.getCenter().lat,
         lng: map.getCenter().lng,
-        nelat: map.getBounds().getNorthEast().lat,
-        nelng: map.getBounds().getNorthEast().lng
+        boundlat: map.getBounds().getNorthEast().lat,
+        boundlng: map.getBounds().getNorthEast().lng
       },
       function(data) {
-        populateVideoList(data);
-        initMarkers();
+        $('#videolist-medias').empty();
+        populateVideoList(data.videos);
+        clearMarkers();
+        initMarkers(data.videos);
         $('#videolist-list').animate({scrollTop: 0}, 500);
       },
       'json'
   )
       .fail(function() {
         errorMessage('Failed to refresh video list');
-      });
+      })
+      .always(function() {
+        unspinSearch();
+      })
+  ;
 }
+
+document.querySelector('#search').addEventListener('submit', event => {
+  event.preventDefault();
+  spinSearch();
+  // process the form
+  $.getJSON(
+      '/search.json',
+      {
+        'place': $('input[name=search]').val()
+      })
+      .done(function(data) {
+        if (data.boundingbox) {
+          //listenOnMove = false;
+          map.fitBounds([
+            [data.boundingbox[1], data.boundingbox[3]],
+            [data.boundingbox[0], data.boundingbox[2]]
+          ]);
+          refreshVideoList(data.videos);
+          initMarkers();
+          //listenOnMove = true;
+        }
+      })
+      .always(function() {
+        unspinSearch();
+      });
+});
+
+function spinSearch() {
+  $('#searchIcon')
+      .removeClass('fa-search')
+      .addClass('fa-refresh')
+      .addClass('fa-spin');
+}
+
+function unspinSearch() {
+  $('#searchIcon')
+      .removeClass('fa-refresh')
+      .removeClass('fa-spin')
+      .addClass('fa-search');
+}
+
+document.querySelector('#nextPage').addEventListener('click', event => {
+  var nextPageBtn = $('#nextPage');
+  if (!nextPageBtn.prop('disabled')) {
+    var originalNextPageTxt = nextPageBtn.text();
+    nextPageBtn.prop('disabled', true);
+    nextPageBtn.html('<i class="fa fa-spinner fa-pulse fa-fw"/>');
+    $.getJSON(
+        '/videos.json',
+        {
+          nextPageToken: nextPageBtn.attr('data-token'),
+          lat: map.getCenter().lat,
+          lng: map.getCenter().lng,
+          boundlat: map.getBounds().getNorthEast().lat,
+          boundlng: map.getBounds().getNorthEast().lng
+        },
+        function(data) {
+          populateVideoList(data.videos);
+          initMarkers(data.videos);
+          nextPageBtn.attr('data-token', data.nextPageToken);
+        },
+        'json')
+        .fail(function() {
+          errorMessage('Failed to refresh video list');
+        })
+        .always(function() {
+          nextPageBtn.text(originalNextPageTxt);
+          nextPageBtn.prop('disabled', false);
+        });
+  }
+});
 
 /**
  * Populate the videolist dom element with mapped video medias
  * @param data videos data server response
  */
 function populateVideoList(data) {
-  $('#videolist-list').empty();
   $.each(data, function(index, video) {
     var media = $('<a>')
         .attr('class', 'media video videolist-media list-group-item list-group-item-action')
+        .attr('data-id', video.youtubeId)
         .attr('data-json', JSON.stringify(video));
-    media.append(
+    media.prepend(
         $('<img/>').attr({
           'class': 'd-flex mr-2 img-fluid',
           'src': 'https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg',
@@ -148,45 +225,8 @@ function populateVideoList(data) {
                 .append($('<h6 class="videolist-footer text-right col-5 pl-0"/>').text(video.timeago))
         );
     media.append(body);
-    $('#videolist-list').append(media);
+    $('#videolist-medias').append(media);
   });
-}
-
-/**
- * Destroy map markers
- */
-function clearMarkers() {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [];
-}
-
-/**
- * Get User geolocation (geolocation button onclick)
- */
-function getGeolocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      reverseGeocode(pos);
-    }, function() {
-      handleLocationError(true);
-    });
-  } else {
-    handleLocationError(false);
-  }
-}
-
-/**
- * Geolocation error alert message
- * @param browserHasGeolocation
- */
-function handleLocationError(browserHasGeolocation) {
-  errorMessage(browserHasGeolocation ? 'The Geolocation service failed.' : 'Your browser doesn\'t support geolocation.');
 }
 
 /**
@@ -212,11 +252,73 @@ function reverseGeocode(latlng, move = true) {
             map.setZoom(10);
           }
         }
+        enableGeoloc();
       } else {
         errorMessage('No results found for reverse geocoding');
+        enableGeoloc();
       }
     } else {
       errorMessage('Geocoder failed due to: ' + status);
+      enableGeoloc();
     }
   });
+}
+
+/**
+ * Destroy map markers
+ */
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers = [];
+}
+
+/**
+ * Get User geolocation (geolocation button onclick)
+ */
+document.querySelector('#geolocate').addEventListener('click', event => {
+  disableGeoloc();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      reverseGeocode(pos);
+    }, function() {
+      handleLocationError(true);
+      enableGeoloc();
+    });
+  } else {
+    handleLocationError(false);
+    enableGeoloc();
+  }
+});
+
+function disableGeoloc() {
+  $('#geolocate')
+      .prop('disabled', true)
+      .find('>i')
+      .removeClass('fa-map-marker')
+      .addClass('fa-spin')
+      .addClass('fa-circle-o-notch')
+  ;
+}
+
+function enableGeoloc() {
+  $('#geolocate').prop('disabled', false)
+      .find('>i')
+      .removeClass('fa-spin')
+      .removeClass('fa-circle-o-notch')
+      .addClass('fa-map-marker')
+  ;
+}
+
+/**
+ * Geolocation error alert message
+ * @param browserHasGeolocation
+ */
+function handleLocationError(browserHasGeolocation) {
+  errorMessage(browserHasGeolocation ? 'The Geolocation service failed.' : 'Your browser doesn\'t support geolocation.');
 }
