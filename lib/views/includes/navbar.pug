@@ -4,9 +4,9 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
         | &nbsp; The Place Tube
         span.badge.badge-warning.ml-2.
             beta
-    button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
-        span(class='navbar-toggler-icon')
-    div#navbarCollapse(class='collapse navbar-collapse')
+    //button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+    //    span(class='navbar-toggler-icon')
+    div#navbarCollapse.collapse.navbar-collapse
         ul(class='navbar-nav mr-auto')
         ul(class='navbar-nav')
             if userId && user
@@ -20,7 +20,7 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
                     })
                         i(class='fa fa-user' aria-hidden='true')
                         | &nbsp; #{user.username}
-                    div(class='dropdown-menu dropdown-menu-right')&attributes({'aria-labelledby': 'usermenu'})
+                    div.dropdown-menu.dropdown-menu-right&attributes({'aria-labelledby': 'usermenu'})
                         a.dropdown-item(href='/videos/add')
                             i.fa.fa-share.fa-fw.mr-2
                             | Share a video
@@ -35,9 +35,9 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
                         a(class='dropdown-item' href='/users/logout')
                             i.fa.fa-sign-out.fa-fw.mr-2(aria-hidden='true')
                             | Logout
-            else
-                div(class='btn-toolbar')
-                    a(href='/users/login' class='btn btn-sm') Login
-                    a(href='/users/join' class='btn btn-success btn-sm')
+            else if (false)
+                div.btn-toolbar
+                    a.btn.btn-sm(href='/users/login') Login
+                    a.btn.btn-sm.btn-success(href='/users/join')
                         i(class='fa fa-sign-in' aria-hidden='true')
                         | &nbsp; Join the club
