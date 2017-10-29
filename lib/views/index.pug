@@ -1,17 +1,10 @@
 extends layout
-include mixins/videocard
 
 block content
     div#navigator.row.no-gutters
         div#leftPanel.col-12.col-md-7.col-xl-8
             div#map
-            a#backtomap.d-none
-                span.badge.badge-light
-                    i.fa.fa-undo(title='Back to map')
-                    |
-                    | Back to map
-            div#video-preview.d-none.embed-responsive.embed-responsive-16by9
-            div#video-metaviewer.d-none
+            include includes/player
         div#rightPanel.col-12.col-md-5.col-xl-4
             div#videolist
                 div#videolist-topbar

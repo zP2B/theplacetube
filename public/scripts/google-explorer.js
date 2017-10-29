@@ -90,8 +90,7 @@ function initMarkers(videos) {
         bubbles: true,
         cancelable: true
       });
-      //TODO
-      // element.dispatchEvent(event);
+      element.dispatchEvent(event);
     });
     markers.push(marker);
   });
@@ -168,6 +167,38 @@ function unspinSearch() {
       .removeClass('fa-spin')
       .addClass('fa-search');
 }
+
+// document.querySelector('.videolist-media').addEventListener('click', event => {
+jQuery('body').on('click', '.videolist-media', function(event) {
+  // do some magic with $(this) element
+  event.preventDefault();
+  var data = JSON.parse($(this).attr('data-json'));
+  $('#player-title').text(data.title);
+  $(this).addClass('visited');
+  $('a.videolist-media.active').removeClass('active');
+  $(this).addClass('active');
+  $('#player').show();
+  $('#player-video')
+      .empty()
+      .append('<iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/' + $(this).attr('data-id') + '?rel=0&showinfo=0&autoplay=1" />');
+  $('#player-meta-title').text(data.title);
+  $('#player-headbar-title').text(data.title);
+  $('#player-meta-timeago-value').text(data.timeago);
+  $('#player-meta-description').html(data.description.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+  $('#player-meta-tags').empty();
+  if (data.tags) {
+    var tags = data.tags.map(Function.prototype.call, String.prototype.trim).filter(String);
+    tags.forEach(function(tag) {
+      $('#player-meta-tags').append('<span class=\'badge badge-secondary mr-1\'><i class=\'fa fa-tag mr-1\'></i>' + tag + '</span>');
+    });
+  }
+});
+
+document.querySelector('#player-headbar-close').addEventListener('click', event => {
+  $('#player').hide();
+  $('a.videolist-media.active').removeClass('active');
+  $('#player-video').empty();
+});
 
 document.querySelector('#nextPage').addEventListener('click', event => {
   var nextPageBtn = $('#nextPage');
