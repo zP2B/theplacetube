@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    include includes/searchform/params-modal
     div#navigator.row.no-gutters
         div#leftPanel.col-12.col-md-7.col-xl-8
             div#map
@@ -8,28 +9,7 @@ block content
         div#rightPanel.col-12.col-md-5.col-xl-4
             div#videolist
                 div#videolist-topbar
-                    h1.lead Search videos around you
-                    form#search
-                        div.input-group
-                            span.input-group-btn
-                                button#geolocate.btn.btn-outline-secondary(type='button')
-                                    i.fa.fa-map-marker.fa-fw
-                            input#place.form-control(placeholder='Search the place to be' name='search' type='search' value=place data-json=geocode)
-                            span.input-group-btn
-                                button#paramsBtn.btn.btn-outline-secondary(type='button')
-                                    i#paramsIcon.fa.fa-cog
-                                button#searchBtn.btn.btn-primary(type='submit' disabled)
-                                    i#searchIcon.fa.fa-search.fa-fw
-                        //div.form-inline
-                        //    label(for='radius') Radius
-                        //    input#radius.form-control(type='range' min='10' max='1000000' value='1000000' name='radius')
-                        //div.form-inline
-                        //    label(for='q') Search
-                        //    input#q.form-control(type='text' name='q')
-                        //div.form-inline
-                        //    label(for='videoCategoryId') Category
-                        //    select#videoCategoryId.form-control(name='videoCategoryId')
-                        //      option
+                    include includes/searchform/place
                 div#videolist-container
                     div#videolist-list
                         span#videolist-medias.list-group
@@ -45,7 +25,6 @@ block content
                             ul.pagination.justify-content-center
                                 li.page-item
                                     a#nextPage.page-link(href='#' data-token=nextPageToken) More results
-
 
 block append scripts
     script(src='/scripts/google-map-style.js')

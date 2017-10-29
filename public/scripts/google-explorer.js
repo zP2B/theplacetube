@@ -96,20 +96,94 @@ function initMarkers(videos) {
   });
 }
 
+document.querySelector('#search-reset-params').addEventListener('click', function(event) {
+  var searchParams = $('#search-params');
+  searchParams.find('input').val('');
+  searchParams.find('select').prop('selectedIndex', 0);
+  $('#paramsBtn')
+      .attr('class', 'btn btn-outline-secondary')
+      .removeAttr('data-json');
+});
+
+document.querySelector('#search-save-params').addEventListener('click', function(event) {
+  var searchParams = $('#search-params');
+  var paramsBtn = $('#paramsBtn');
+  var datajson = {};
+  searchParams.find('input, select').each(function() {
+    if ($(this).val() && (!$(this).is('select') || $(this).prop('selectedIndex') > 0)) {
+      datajson[$(this).attr('name')] = $(this).val();
+    }
+  });
+  if (!jQuery.isEmptyObject(datajson)) {
+    paramsBtn
+        .attr('class', 'btn btn-primary')
+        .attr('data-json', JSON.stringify(datajson));
+  } else {
+    paramsBtn
+        .attr('class', 'btn btn-outline-primary')
+        .removeAttr('data-json');
+  }
+  refreshVideoList();
+});
+
+$('#search-params').on('shown.bs.modal', function() {
+  $('#search-params-q').trigger('focus');
+});
+
+document.querySelector('#search').addEventListener('submit', function(event) {
+  event.preventDefault();
+});
+
+jQuery('body').on('click', '.videolist-media', function(event) {
+  // do some magic with $(this) element
+  event.preventDefault();
+  var data = JSON.parse($(this).attr('data-json'));
+  $('#player-title').text(data.title);
+  $(this).addClass('visited');
+  $('a.videolist-media.active').removeClass('active');
+  $(this).addClass('active');
+  $('#player-video')
+      .empty()
+      .append('<iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/' + $(this).attr('data-id') + '?rel=0&showinfo=0&autoplay=1" />');
+  $('#player-meta-title').text(data.title);
+  $('#player-headbar-title').text(data.title);
+  $('#player-meta-timeago-value').text(data.timeago);
+  $('#player-meta-description').html(data.description.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+  $('#player-meta-tags').empty();
+  if (data.tags) {
+    var tags = data.tags.map(Function.prototype.call, String.prototype.trim).filter(String);
+    tags.forEach(function(tag) {
+      $('#player-meta-tags').append('<span class=\'badge badge-secondary mr-1\'><i class=\'fa fa-tag mr-1\'></i>' + tag + '</span>');
+    });
+  }
+  $('#player').show();
+});
+
+document.querySelector('#player-headbar-close').addEventListener('click', function(event) {
+  $('#player').hide();
+  $('a.videolist-media.active').removeClass('active');
+  $('#player-video').empty();
+});
+
 /**
  * Triggered when map bounds changed
  * refresh videolist
  */
 function refreshVideoList() {
   spinSearch();
+  var params = {
+    lat: map.getCenter().lat,
+    lng: map.getCenter().lng,
+    boundlat: map.getBounds().getNorthEast().lat,
+    boundlng: map.getBounds().getNorthEast().lng
+  };
+  var paramsBtn = $('#paramsBtn');
+  if (paramsBtn.attr('data-json')) {
+    params.params = paramsBtn.attr('data-json');
+  }
   $.getJSON(
-      '/videos.json',
-      {
-        lat: map.getCenter().lat,
-        lng: map.getCenter().lng,
-        boundlat: map.getBounds().getNorthEast().lat,
-        boundlng: map.getBounds().getNorthEast().lng
-      },
+      '/search.json',
+      params,
       function(data) {
         $('#videolist-medias').empty();
         populateVideoList(data.videos);
@@ -128,93 +202,26 @@ function refreshVideoList() {
   ;
 }
 
-document.querySelector('#search').addEventListener('submit', event => {
-  event.preventDefault();
-  spinSearch();
-  // process the form
-  $.getJSON(
-      '/search.json',
-      {
-        'place': $('input[name=search]').val()
-      })
-      .done(function(data) {
-        if (data.boundingbox) {
-          //listenOnMove = false;
-          map.fitBounds([
-            [data.boundingbox[1], data.boundingbox[3]],
-            [data.boundingbox[0], data.boundingbox[2]]
-          ]);
-          refreshVideoList(data.videos);
-          initMarkers();
-          //listenOnMove = true;
-        }
-      })
-      .always(function() {
-        unspinSearch();
-      });
-});
-
-function spinSearch() {
-  $('#searchIcon')
-      .removeClass('fa-search')
-      .addClass('fa-refresh')
-      .addClass('fa-spin');
-}
-
-function unspinSearch() {
-  $('#searchIcon')
-      .removeClass('fa-refresh')
-      .removeClass('fa-spin')
-      .addClass('fa-search');
-}
-
-// document.querySelector('.videolist-media').addEventListener('click', event => {
-jQuery('body').on('click', '.videolist-media', function(event) {
-  // do some magic with $(this) element
-  event.preventDefault();
-  var data = JSON.parse($(this).attr('data-json'));
-  $('#player-title').text(data.title);
-  $(this).addClass('visited');
-  $('a.videolist-media.active').removeClass('active');
-  $(this).addClass('active');
-  $('#player').show();
-  $('#player-video')
-      .empty()
-      .append('<iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/' + $(this).attr('data-id') + '?rel=0&showinfo=0&autoplay=1" />');
-  $('#player-meta-title').text(data.title);
-  $('#player-headbar-title').text(data.title);
-  $('#player-meta-timeago-value').text(data.timeago);
-  $('#player-meta-description').html(data.description.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-  $('#player-meta-tags').empty();
-  if (data.tags) {
-    var tags = data.tags.map(Function.prototype.call, String.prototype.trim).filter(String);
-    tags.forEach(function(tag) {
-      $('#player-meta-tags').append('<span class=\'badge badge-secondary mr-1\'><i class=\'fa fa-tag mr-1\'></i>' + tag + '</span>');
-    });
-  }
-});
-
-document.querySelector('#player-headbar-close').addEventListener('click', event => {
-  $('#player').hide();
-  $('a.videolist-media.active').removeClass('active');
-  $('#player-video').empty();
-});
-
-document.querySelector('#nextPage').addEventListener('click', event => {
+document.querySelector('#nextPage').addEventListener('click', function(event) {
   var nextPageBtn = $('#nextPage');
   if (!nextPageBtn.prop('disabled')) {
     var originalNextPageTxt = nextPageBtn.text();
     nextPageBtn.prop('disabled', true);
     nextPageBtn.html('<i class="fa fa-spinner fa-pulse fa-fw"/>');
+    var params = {
+      nextPageToken: nextPageBtn.attr('data-token'),
+      lat: map.getCenter().lat,
+      lng: map.getCenter().lng,
+      boundlat: map.getBounds().getNorthEast().lat,
+      boundlng: map.getBounds().getNorthEast().lng
+    };
+    var paramsBtn = $('#paramsBtn');
+    if (paramsBtn.attr('data-json')) {
+      params.params = paramsBtn.attr('data-json');
+    }
     $.getJSON(
-        '/videos.json',
-        {
-          nextPageToken: nextPageBtn.attr('data-token'),
-          lat: map.getCenter().lat,
-          lng: map.getCenter().lng,
-          boundlat: map.getBounds().getNorthEast().lat,
-          boundlng: map.getBounds().getNorthEast().lng
-        },
+        '/search.json',
+        params,
         function(data) {
           populateVideoList(data.videos);
           initMarkers(data.videos);
@@ -264,24 +271,20 @@ function populateVideoList(data) {
  * Reverse geocoding used after geolocate to print address in place field
  * center the map on location viewport
  * @param latlng position of geolocation result
- * @param move if false do not trigger map move
  */
-function reverseGeocode(latlng, move = true) {
+function reverseGeocode(latlng) {
   var geocoder = new google.maps.Geocoder();
-  // var latlng = new google.maps.LatLng(lat, lng);
   geocoder.geocode({
     'latLng': latlng
   }, function(results, status) {
     if (status === google.maps.GeocoderStatus.OK) {
       if (results[1]) {
         place.value = results[1].formatted_address;
-        if (move) {
-          if (results[1].geometry.viewport) {
-            map.fitBounds(results[1].geometry.viewport);
-          } else {
-            map.panTo(latlng);
-            map.setZoom(10);
-          }
+        if (results[1].geometry.viewport) {
+          map.fitBounds(results[1].geometry.viewport);
+        } else {
+          map.panTo(latlng);
+          map.setZoom(10);
         }
         enableGeoloc();
       } else {
@@ -308,7 +311,7 @@ function clearMarkers() {
 /**
  * Get User geolocation (geolocation button onclick)
  */
-document.querySelector('#geolocate').addEventListener('click', event => {
+document.querySelector('#geolocate').addEventListener('click', function(event) {
   disableGeoloc();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -326,6 +329,20 @@ document.querySelector('#geolocate').addEventListener('click', event => {
     enableGeoloc();
   }
 });
+
+function spinSearch() {
+  $('#paramsIcon')
+      .removeClass('fa-cog')
+      .addClass('fa-refresh')
+      .addClass('fa-spin');
+}
+
+function unspinSearch() {
+  $('#paramsIcon')
+      .removeClass('fa-refresh')
+      .removeClass('fa-spin')
+      .addClass('fa-cog');
+}
 
 function disableGeoloc() {
   $('#geolocate')

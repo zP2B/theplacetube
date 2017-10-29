@@ -244,8 +244,6 @@ a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist
 .videolist-footer {
     display: block;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    /*color: rgb(17, 17, 17);*/
     font-size: 0.8rem;
     max-height: 1rem;
     overflow: hidden;
@@ -253,7 +251,6 @@ a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist
     line-height: 1rem;
     text-transform: none;
     margin-bottom: 0;
-    max-width: 220px;
 }
 
 .videolist-media {

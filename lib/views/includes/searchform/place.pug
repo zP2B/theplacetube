@@ -1,0 +1,10 @@
+h1.lead Search videos around you
+form#search
+    div#search-main.input-group
+        span.input-group-btn
+            button#geolocate.btn.btn-outline-secondary(type='button' title='Geolocate my position')
+                i.fa.fa-map-marker.fa-fw(aria-hidden='true' aria-label='Geolocation')
+        input#place.form-control(placeholder='Search the place to be' name='search' type='search' value=place data-json=geocode)
+        span.input-group-btn
+            button#paramsBtn.btn.btn-outline-primary(type='button' data-toggle="modal" data-target="#search-params" title='Edit search parameters')
+                i#paramsIcon.fa.fa-fw.fa-cog(aria-hidden='true' aria-label='Search parameters')
