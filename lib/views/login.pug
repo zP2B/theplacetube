@@ -6,11 +6,9 @@ block append styles
 block content
     div.wrapper.text-center
         form.form-signin(method='POST')
-            h2(class='form-signin-heading')
-                i.fa.fa-globe
-                | &nbsp;
-                | Login page
-            hr
+            h1.h2.form-signin-heading Login
+            p.lead
+                | Account email and password
             input.form-control.text-center(type='text' name='logemail' placeholder='Email Address' required='' autofocus='')
             input.form-control.text-center(type='password' name='logpassword' placeholder='Password' required='')
             label.checkbox
