@@ -1,6 +1,6 @@
 var map;
 var markers = [];
-var place;
+var pacInput = document.getElementById('place');
 var autocomplete;
 
 /**
@@ -47,8 +47,31 @@ function initMap() {
  * Initialize place input field with google places autocomplete api
  */
 function initAutocomplete() {
-  place = document.getElementById('place');
-  autocomplete = new google.maps.places.Autocomplete(place);
+  (function pacSelectFirst(input) {
+    var _addEventListener = (input.addEventListener) ? input.addEventListener : input.attachEvent;
+
+    function addEventListenerWrapper(type, listener) {
+      if (type === 'keydown') {
+        var orig_listener = listener;
+        listener = function(event) {
+          var suggestion_selected = $('.pac-item-selected').length > 0;
+          if (event.which === 13 && !suggestion_selected) {
+            var simulated_downarrow = $.Event('keydown', {
+              keyCode: 40,
+              which: 40
+            });
+            orig_listener.apply(input, [simulated_downarrow]);
+          }
+          orig_listener.apply(input, [event]);
+        };
+      }
+      _addEventListener.apply(input, [type, listener]);
+    }
+
+    input.addEventListener = addEventListenerWrapper;
+    input.attachEvent = addEventListenerWrapper;
+  })(pacInput);
+  autocomplete = new google.maps.places.Autocomplete(pacInput);
   autocomplete.addListener('place_changed', function() {
     var place = autocomplete.getPlace();
     if (!place.geometry) {
@@ -96,39 +119,44 @@ function initMarkers(videos) {
   });
 }
 
-document.querySelector('#search-reset-params').addEventListener('click', function(event) {
-  var searchParams = $('#search-params');
-  searchParams.find('input').val('');
-  searchParams.find('select').prop('selectedIndex', 0);
-  $('#paramsBtn')
-      .attr('class', 'btn btn-outline-secondary')
-      .removeAttr('data-json');
-});
+document.querySelector('#search-reset-params').addEventListener('click', resetSearchParams);
 
-document.querySelector('#search-save-params').addEventListener('click', function(event) {
-  var searchParams = $('#search-params');
-  var paramsBtn = $('#paramsBtn');
-  var datajson = {};
-  searchParams.find('input, select').each(function() {
-    if ($(this).val() && (!$(this).is('select') || $(this).prop('selectedIndex') > 0)) {
-      datajson[$(this).attr('name')] = $(this).val();
+document.getElementById('search-save-params').addEventListener('click', function(event) {
+  var data = {};
+  document.getElementById('search-params').querySelectorAll('input, select').forEach(function(control) {
+    if (control.value) {
+      data[control.getAttribute('name')] = control.value;
     }
   });
-  if (!jQuery.isEmptyObject(datajson)) {
-    paramsBtn
-        .attr('class', 'btn btn-primary')
-        .attr('data-json', JSON.stringify(datajson));
-  } else {
-    paramsBtn
-        .attr('class', 'btn btn-outline-primary')
-        .removeAttr('data-json');
-  }
+  document.getElementById('paramsBtn').setAttribute('class', 'btn btn-primary');
+  document.getElementById('paramsBtn').setAttribute('data-json', JSON.stringify(data));
   refreshVideoList();
 });
 
-$('#search-params').on('shown.bs.modal', function() {
-  $('#search-params-q').trigger('focus');
-});
+$('#search-params')
+    .on('show.bs.modal', function() {
+      var data = JSON.parse(document.getElementById('paramsBtn').getAttribute('data-json'));
+      loadSearchParams(data);
+    })
+    .on('shown.bs.modal', function() {
+      document.getElementById('search-params-q').focus();
+    });
+
+function resetSearchParams() {
+  document.querySelectorAll('#search-params select').forEach(function(select) {
+    select.value = select.getAttribute('data-default');
+  });
+  document.querySelectorAll('#search-params input').forEach(function(input) {
+    input.value = '';
+  });
+}
+
+function loadSearchParams(data) {
+  resetSearchParams();
+  Object.keys(data).forEach(function(prop) {
+    document.querySelector('#search-params [name=' + prop + ']').value = data[prop];
+  });
+}
 
 document.querySelector('#search').addEventListener('submit', function(event) {
   event.preventDefault();
@@ -185,11 +213,22 @@ function refreshVideoList() {
       '/search.json',
       params,
       function(data) {
-        $('#videolist-medias').empty();
-        populateVideoList(data.videos);
+        document.getElementById('videolist-medias').innerHTML = '';
         clearMarkers();
-        initMarkers(data.videos);
-        $('#videolist-list').animate({scrollTop: 0}, 500);
+        if (data.nextPageToken) {
+          $('#nextPage')
+              .show()
+              .attr('data-token', data.nextPageToken);
+        } else {
+          $('#nextPage').hide();
+        }
+        if (data.videos.length === 0) {
+          document.getElementById('videolist-medias').innerHTML = '<p class="text-center alert alert-dark"><i class="fa fa-frown-o"></i>&nbsp;No results</p>';
+        } else {
+          populateVideoList(data.videos);
+          initMarkers(data.videos);
+          $('#videolist-list').animate({scrollTop: 0}, 500);
+        }
       },
       'json'
   )
@@ -203,6 +242,7 @@ function refreshVideoList() {
 }
 
 document.querySelector('#nextPage').addEventListener('click', function(event) {
+  event.preventDefault();
   var nextPageBtn = $('#nextPage');
   if (!nextPageBtn.prop('disabled')) {
     var originalNextPageTxt = nextPageBtn.text();
@@ -279,7 +319,7 @@ function reverseGeocode(latlng) {
   }, function(results, status) {
     if (status === google.maps.GeocoderStatus.OK) {
       if (results[1]) {
-        place.value = results[1].formatted_address;
+        pacInput.value = results[1].formatted_address;
         if (results[1].geometry.viewport) {
           map.fitBounds(results[1].geometry.viewport);
         } else {
