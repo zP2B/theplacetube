@@ -5,8 +5,9 @@ block append styles
 block content
     div.wrapper
         form#joinform.form-join(method='POST')
-            h2.form-join-heading Register page
-            hr
+            h1.h2.form-join-heading.text-center Register
+            p.lead
+                | Complete this form to create an account and gain access to restricted functionalities
             div.form-group
                 label(for='username') Choose a username
                 input#username(
@@ -59,4 +60,7 @@ block content
                     div.invalid-feedback #{errors.passwordConf.msg}
 
             button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
-            a.btn.btn-block(href='/users/login' role='button' aria-label='login') I have already an account
+            a.btn.btn-block(href='/users/login' role='button' aria-label='login')
+                i.fa.fa-question-circle
+                | &nbsp;
+                | I already have an account
