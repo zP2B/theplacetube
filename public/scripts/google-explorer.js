@@ -1,3 +1,4 @@
+/* global google,googleMapStyle,errorMessage */
 var map;
 var markers = [];
 var pacInput = document.getElementById('place');
