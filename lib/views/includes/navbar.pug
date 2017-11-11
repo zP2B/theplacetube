@@ -16,27 +16,14 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
                         | Login
             else
                 li.nav-item.dropdown
-                    a#usermenu.nav-link.dropdown-toggle.unselectable(
-                    href='/users/profile/' + user.username
-                    )&attributes({
-                      'data-toggle': 'dropdown',
-                      'aria-haspopup': 'true',
-                      'aria-expanded': 'false'
-                    })
+                    a#usermenu.nav-link.dropdown-toggle.unselectable(href='/users/profile/' + user.username data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                         i.fa.fa-user(aria-hidden='true')
                         | &nbsp; #{user.username}
-                    div.dropdown-menu.dropdown-menu-right&attributes({'aria-labelledby': 'usermenu'})
-                        a.dropdown-item(href='/videos/add')
-                            i.fa.fa-share.fa-fw.mr-2
-                            | Share a video
-                        div.dropdown-divider
-                        a.dropdown-item(href='/users/profile/' + user.username)
-                            i.fa.fa-user.fa-fw.mr-2
-                            | View my profile
-                        a.dropdown-item(href='/users/profile/' + user.username + '/edit')
-                            i.fa.fa-edit.fa-fw.mr-2
-                            | Edit my account
-                        div.dropdown-divider
+                    div.dropdown-menu.dropdown-menu-right
+                        //a.dropdown-item(href='/videos/add')
+                        //    i.fa.fa-share.fa-fw.mr-2
+                        //    | Share a video
+                        //div.dropdown-divider
                         a(class='dropdown-item' href='/users/logout')
                             i.fa.fa-sign-out.fa-fw.mr-2(aria-hidden='true')
                             | Logout
