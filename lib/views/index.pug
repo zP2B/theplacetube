@@ -24,7 +24,7 @@ block content
                         nav#videolist-pagination(aria-label='Page navigation')
                             ul.pagination.justify-content-center
                                 li.page-item
-                                    a#nextPage.page-link(href='#' data-token=nextPageToken) More results
+                                    a#nextPage.page-link(href='#' data-token=nextPageToken style=(nextPageToken ? false : 'display: none;')) More results
 
 block append scripts
     script(src='/scripts/google-map-style.js')
