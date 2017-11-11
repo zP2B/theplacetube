@@ -1,12 +1,12 @@
-div#search-params.modal.fade(tabindex="-1" role="dialog" aria-labelledby="search-params-title" aria-hidden="true")
-    div.modal-dialog.modal-lg(role="document")
+div#search-params.modal.fade(tabindex='-1' role='dialog' aria-labelledby='search-params-title' aria-hidden='true')
+    div.modal-dialog.modal-lg(role='document')
         div.modal-content
             div.modal-header
-                h5#search-params-title.modal-title Search parameters
-                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                    span(aria-hidden="true") &times;
+                h2.h5#search-params-title.modal-title Search settings
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
             div.modal-body
-                h6
+                h3.h6
                     i.fa.fa-fw.fa-filter.mr-1
                     | Filters
                 div.form-group.row
@@ -17,30 +17,30 @@ div#search-params.modal.fade(tabindex="-1" role="dialog" aria-labelledby="search
                 div.form-group.row
                     label.col-sm-3.col-form-label(for='search-params-videoCategoryId') Category
                     div.col-sm-9
-                        select#search-params-videoCategoryId.form-control(name='videoCategoryId' aria-describedby='videoCategoryIdHelpBlock')
+                        select#search-params-videoCategoryId.form-control.custom-select(name='videoCategoryId' aria-describedby='videoCategoryIdHelpBlock' data-default='')
                             include category-options
                         small#videoCategoryIdHelpBlock.form-text.text-muted Filters video search results based on their category.
                 div.form-group.row
                     label.col-sm-3.col-form-label(for='search-params-eventType') Broadcast
                     div.col-sm-9
-                        select#search-params-eventType.form-control(name='eventType' aria-describedby='eventTypeHelpBlock')
+                        select#search-params-eventType.form-control.custom-select(name='eventType' aria-describedby='eventTypeHelpBlock' data-default='')
                             option(value='' selected) No
                             option(value='completed' title='Only include completed broadcasts.') Completed
                             option(value='live' title='Only include active broadcasts.') Live
                             option(value='upcoming' title='Only include upcoming broadcasts') Upcoming
                         small#eventTypeHelpBlock.form-text.text-muted Restricts search to broadcast events.
-                h6
+                h3.h6
                     i.fa.fa-fw.fa-sort.mr-1
                     | Sort
                 div.form-group.row
                     label.col-sm-3.col-form-label(for='search-params-order') Order by
                     div.col-sm-9
-                        select#search-params-order.form-control(name='order' aria-describedby='orderHelpBlock')
-                            option(value='date' title='Videos are sorted in reverse chronological order based on the date they were created.' selected) Date
-                            option(value='rating' title='Videos are sorted from highest to lowest rating.') Rating
+                        select#search-params-order.form-control.custom-select(name='order' aria-describedby='orderHelpBlock' data-default='rating')
+                            option(value='date' title='Videos are sorted in reverse chronological order based on the date they were created.') Date
+                            option(value='rating' title='Videos are sorted from highest to lowest rating.' selected) Rating
                             option(value='relevance' title='Videos are sorted based on their relevance to the search query.') Relevance
                             option(value='viewCount' title='Videos are sorted from highest to lowest number of views. For live broadcasts, videos are sorted by number of concurrent viewers while the broadcasts are ongoing.') View count
                         small#orderHelpBlock.form-text.text-muted The method that will be used to order results.
             div.modal-footer
-                button#search-reset-params.btn.btn-danger(type="reset") Reset
-                button#search-save-params.btn.btn-primary(type="button" data-dismiss="modal") Save changes
+                button#search-reset-params.btn.btn-danger(type='reset') Reset
+                button#search-save-params.btn.btn-primary(type='button' data-dismiss='modal') Save changes
