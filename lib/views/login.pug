@@ -4,14 +4,20 @@ block append styles
     link(rel='stylesheet' href='/stylesheets/login.css')
 
 block content
-    div(class="wrapper text-center")
-        form(class="form-signin" method="POST")
-            h2(class="form-signin-heading") Please login
+    div.wrapper.text-center
+        form.form-signin(method='POST')
+            h2(class='form-signin-heading')
+                i.fa.fa-globe
+                | &nbsp;
+                | Login page
             hr
-            input(type="text" class="form-control text-center" name="logemail" placeholder="Email Address" required="" autofocus="")
-            input(type="password" class="form-control text-center" name="logpassword" placeholder="Password" required="")
-            label(class="checkbox")
-                input#rememberMe(type="checkbox" value="remember-me" name="rememberMe")
+            input.form-control.text-center(type='text' name='logemail' placeholder='Email Address' required='' autofocus='')
+            input.form-control.text-center(type='password' name='logpassword' placeholder='Password' required='')
+            label.checkbox
+                input#rememberMe(type='checkbox' value='remember-me' name='rememberMe')
                 | &nbsp; Remember me
-            button(class="btn btn-lg btn-primary btn-block" type="submit") Login
-            a(href="/users/join" class="btn btn-block") You have not yet joined the club?
+            button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
+            a.btn.btn-block(href='/users/join')
+                i.fa.fa-question-circle
+                | &nbsp;
+                | I don't have an account already
