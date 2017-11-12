@@ -293,7 +293,7 @@ function populateVideoList(data) {
         $('<img/>').attr({
           'class': 'd-flex mr-2 img-fluid',
           'src': 'https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg',
-          'alt': video.title
+          'alt': ''
         })
     );
     var body = $('<div class="media-body"/>')
