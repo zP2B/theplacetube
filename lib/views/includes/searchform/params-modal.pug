@@ -2,11 +2,11 @@ div#search-params.modal.fade(tabindex='-1' role='dialog' aria-labelledby='search
     div.modal-dialog.modal-lg(role='document')
         div.modal-content
             div.modal-header
-                h2.h5#search-params-title.modal-title Search settings
+                p.h5#search-params-title.modal-title Search settings
                 button.close(type='button' data-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
             div.modal-body
-                h3.h6
+                p.h6
                     i.fa.fa-fw.fa-filter.mr-1
                     | Filters
                 div.form-group.row
@@ -29,7 +29,7 @@ div#search-params.modal.fade(tabindex='-1' role='dialog' aria-labelledby='search
                             option(value='live' title='Only include active broadcasts.') Live
                             option(value='upcoming' title='Only include upcoming broadcasts') Upcoming
                         small#eventTypeHelpBlock.form-text.text-muted Restricts search to broadcast events.
-                h3.h6
+                p.h6
                     i.fa.fa-fw.fa-sort.mr-1
                     | Sort
                 div.form-group.row

@@ -297,11 +297,11 @@ function populateVideoList(data) {
         })
     );
     var body = $('<div class="media-body"/>')
-        .append($('<h5 class="h6 videolist-title"/>').text(video.title))
+        .append($('<h2 class="videolist-title h6"/>').text(video.title))
         .append(
             $('<div class="row"/>')
-                .append($('<h6 class="videolist-footer col-7 pr-0"/>').text(video.author))
-                .append($('<h6 class="videolist-footer text-right col-5 pl-0"/>').text(video.timeago))
+                .append($('<p class="videolist-footer h6 col-7 pr-0"/>').text(video.author))
+                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(video.timeago))
         );
     media.append(body);
     $('#videolist-medias').append(media);

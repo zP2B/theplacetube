@@ -1,7 +1,6 @@
 extends layout
 
 block content
-    include includes/searchform/params-modal
     div#navigator.row.no-gutters
         div#leftPanel.col-12.col-sm-6.col-md-7.col-xl-8
             div#map
@@ -17,15 +16,15 @@ block content
                                 a.media.video.videolist-media.list-group-item.list-group-item-action(data-id=video.youtubeId data-json=video)
                                     img.d-flex.mr-2.img-fluid(src='https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg' alt='')
                                     div.media-body
-                                        h5.h6.videolist-title= video.title
+                                        h2.videolist-title.h6= video.title
                                         div.row
-                                            h6.videolist-footer.col-7.pr-0= video.author
-                                            h6.videolist-footer.col-5.text-right.pl-0= video.timeago
+                                            p.videolist-footer.h6.col-7.pr-0= video.author
+                                            p.videolist-footer.h6.col-5.text-right.pl-0= video.timeago
                         nav#videolist-pagination(aria-label='Page navigation')
                             ul.pagination.justify-content-center
                                 li.page-item
                                     a#nextPage.page-link(href='#' data-token=nextPageToken style=(nextPageToken ? false : 'display: none;')) More results
-
+        include includes/searchform/params-modal
 block append scripts
     script(src='/scripts/google-map-style.js')
     script(src='/scripts/google-explorer.js')
