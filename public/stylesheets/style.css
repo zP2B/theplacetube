@@ -136,6 +136,23 @@ input[type=number] {
     cursor: pointer;
 }
 
+#player-scroll-handler {
+    z-index: 10;
+    position: sticky;
+    top: 0;
+    height: 0;
+    display: none;
+    text-align: center;
+}
+
+#player-scroll-handler > a {
+    opacity: 0.85;
+}
+
+#player-scroll-handler > a:hover {
+    opacity: 1;
+}
+
 #videolist {
     height: 100%;
 }
