@@ -19,12 +19,6 @@ const helmet = require('helmet');
 // routes
 const index = require('./lib/routes/index');
 const users = require('./lib/routes/users');
-// const videos = require('./lib/routes/videos');
-
-// TODO remove this nasty error handling
-process.on('uncaughtException', (err) => {
-  console.log('Caught exception: ' + err);
-});
 
 nconf
     .argv()
@@ -102,6 +96,7 @@ app.use(clientErrorHandler);
 
 function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
+    logger.error(err.message, err.stack);
     return res.status(500).send({error: err.message});
   }
   next(err);
