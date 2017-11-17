@@ -163,17 +163,16 @@ document.querySelector('#search').addEventListener('submit', function(event) {
   event.preventDefault();
 });
 
-jQuery('body').on('click', '.videolist-media', function(event) {
-  // do some magic with $(this) element
-  event.preventDefault();
-  var data = JSON.parse($(this).attr('data-json'));
+function playVideo(id) {
+  var element = document.querySelector('.video[data-id="' + id + '"]');
+  var data = JSON.parse(element.getAttribute('data-json'));
   $('#player-title').text(data.title);
-  $(this).addClass('visited');
   $('a.videolist-media.active').removeClass('active');
-  $(this).addClass('active');
+  element.classList.add('visited');
+  element.classList.add('active');
   $('#player-video')
       .empty()
-      .append('<iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/' + $(this).attr('data-id') + '?rel=0&showinfo=0&autoplay=1" />');
+      .append('<iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/' + id + '?rel=0&showinfo=0&autoplay=1" />');
   $('#player-meta-title').text(data.title);
   $('#player-headbar-title').text(data.title);
   $('#player-meta-timeago-value').text(data.timeago);
@@ -186,13 +185,21 @@ jQuery('body').on('click', '.videolist-media', function(event) {
     });
   }
   $('#player').show();
+}
+
+document.querySelector('#player-headbar-close').addEventListener('click', function() {
+  history.pushState('', document.title, window.location.pathname + window.location.search);
+  backToMap();
 });
 
-document.querySelector('#player-headbar-close').addEventListener('click', function(event) {
+/**
+ * Close the video and back to map
+ */
+function backToMap() {
   $('#player').hide();
   $('a.videolist-media.active').removeClass('active');
   $('#player-video').empty();
-});
+}
 
 /**
  * Triggered when map bounds changed
@@ -287,6 +294,7 @@ function populateVideoList(data) {
   $.each(data, function(index, video) {
     var media = $('<a>')
         .attr('class', 'media video videolist-media list-group-item list-group-item-action')
+        .attr('href', '#' + video.youtubeId)
         .attr('data-id', video.youtubeId)
         .attr('data-json', JSON.stringify(video));
     media.prepend(
@@ -410,4 +418,22 @@ function enableGeoloc() {
  */
 function handleLocationError(browserHasGeolocation) {
   errorMessage(browserHasGeolocation ? 'The Geolocation service failed.' : 'Your browser doesn\'t support geolocation.');
+}
+
+window.onpopstate = handleNavigation;
+
+/**
+ * Handle navigation - window.onpopstate event handler
+ * @param event
+ */
+function handleNavigation(event) {
+  var state = event.state;
+  var hash = window.location.hash.replace('#', '');
+  var active = document.querySelector('.video.active');
+  var current = active ? active.getAttribute('data-id') : null;
+  if (hash && !(current && hash === current)) {
+    playVideo(hash);
+  } else {
+    backToMap();
+  }
 }

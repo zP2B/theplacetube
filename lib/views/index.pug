@@ -13,7 +13,7 @@ block content
                     div#videolist-list
                         span#videolist-medias.list-group
                             each video in videos
-                                a.media.video.videolist-media.list-group-item.list-group-item-action(data-id=video.youtubeId data-json=video)
+                                a.media.video.videolist-media.list-group-item.list-group-item-action(data-id=video.youtubeId data-json=video href='#' + video.youtubeId)
                                     img.d-flex.mr-2.img-fluid(src='https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg' alt='')
                                     div.media-body
                                         h2.videolist-title.h6= video.title
