@@ -15,9 +15,11 @@ function initMap() {
     clickableIcons: false,
     disableDefaultUI: true,
     keyboardShortcuts: false,
+    mapTypeControl: true,
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     maxZoom: 15,
     minZoom: 4,
+    rotateControl: true,
     zoomControl: true,
     zoomControlOptions: {
       position: google.maps.ControlPosition.TOP_LEFT
@@ -109,12 +111,7 @@ function initMarkers(videos) {
       $('#videolist-list').animate({
         scrollTop: element.getBoundingClientRect().top + element.parentElement.scrollTop - element.parentElement.getBoundingClientRect().top
       }, 500);
-      var event = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      });
-      element.dispatchEvent(event);
+      playVideo(element.getAttribute('data-id'));
     });
     markers.push(marker);
   });
@@ -185,6 +182,7 @@ function playVideo(id) {
     });
   }
   $('#player').show();
+  document.getElementById('player').scrollTo(0, 0);
 }
 
 document.querySelector('#player-headbar-close').addEventListener('click', backToMap);
@@ -193,7 +191,9 @@ document.querySelector('#player-headbar-close').addEventListener('click', backTo
  * Close the video and back to map
  */
 function backToMap() {
-  history.pushState('', document.title, window.location.pathname + window.location.search);
+  if (window.location.hash.replace('#', '').length) {
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  }
   $('#player').hide();
   $('a.videolist-media.active').removeClass('active');
   $('#player-video').empty();
@@ -433,5 +433,16 @@ function handleNavigation(event) {
     playVideo(hash);
   } else {
     backToMap();
+  }
+}
+
+document.getElementById('player').onscroll = playerScrollHandler;
+
+function playerScrollHandler() {
+  var container = document.getElementById('player');
+  if (container.scrollTop > 100) {
+    document.getElementById('player-scroll-handler').style.display = 'block';
+  } else {
+    document.getElementById('player-scroll-handler').style.display = 'none';
   }
 }
