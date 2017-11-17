@@ -4,7 +4,6 @@ body {
 
 .form-join {
     max-width: 800px;
-    width: 75%;
     padding: 15px 35px 15px;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -35,4 +34,8 @@ body {
 
 .form-join .form-group {
     margin-bottom: 0.8rem;
+}
+
+.form-join .btn {
+    white-space: normal;
 }
