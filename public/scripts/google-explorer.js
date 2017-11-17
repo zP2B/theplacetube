@@ -187,15 +187,13 @@ function playVideo(id) {
   $('#player').show();
 }
 
-document.querySelector('#player-headbar-close').addEventListener('click', function() {
-  history.pushState('', document.title, window.location.pathname + window.location.search);
-  backToMap();
-});
+document.querySelector('#player-headbar-close').addEventListener('click', backToMap);
 
 /**
  * Close the video and back to map
  */
 function backToMap() {
+  history.pushState('', document.title, window.location.pathname + window.location.search);
   $('#player').hide();
   $('a.videolist-media.active').removeClass('active');
   $('#player-video').empty();
