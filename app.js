@@ -78,7 +78,6 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user;
   res.locals.baseUrl = req.protocol + '://' + req.get('host');
   res.locals.currentUrl = res.locals.baseUrl + req.originalUrl;
-  res.locals.mapboxApiToken = nconf.get('mapbox_api_token');
   next();
 });
 
