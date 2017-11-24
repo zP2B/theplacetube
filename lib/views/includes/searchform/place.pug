@@ -1,11 +1,37 @@
-h1.lead
+h1.lead.d-none
     | Explore the world
 form#search
-    div#search-main.input-group
+    div#main-search.input-group.mb-1
+        input#search-params-q.form-control(type='text' name='q' aria-describedby='qHelpBlock' placeholder='Search')
         span.input-group-btn
-            button#geolocate.btn.btn-outline-secondary(type='button' title='Get my position' aria-label='Geolocation')
+            button#searchBtn.btn.btn-primary(type='submit' title='Search' aria-label='Search')
+                i#searchIcon.fa.fa-fw.fa-search(aria-hidden='true')
+    div.btn-toolbar.justify-content-between(role='toolbar' aria-label='Filter and sort toolbar')
+        div#sort-group.btn-group.btn-group-sm.mr-1(data-toggle='buttons' role='group')
+            label.btn.btn-light(title='order by date')
+                input(type='radio' name='order' value='date' autocomplete='off')
+                i.fa.fa-calendar
+            label.btn.btn-light.active(title='order by views count')
+                input(type='radio' name='order' value='viewCount' autocomplete='off' checked)
+                i.fa.fa-eye
+            label.btn.btn-light(title='order by rating')
+                input(type='radio' name='order' value='rating' autocomplete='off')
+                i.fa.fa-star
+            label.btn.btn-light(title='order by relevance')
+                input(type='radio' name='order' value='relevance' autocomplete='off')
+                i.fa.fa-search
+        select#publishedAfter(aria-label='Upload date' name='publishedAfter')
+            option(value='' selected) Upload date
+            option(value=moment().subtract(1, 'hours').toISOString()) Last hour
+            option(value=moment().subtract(1, 'days').toISOString()) Today
+            option(value=moment().subtract(1, 'weeks').toISOString()) This week
+            option(value=moment().subtract(1, 'months').toISOString()) This month
+            option(value=moment().subtract(1, 'year').toISOString()) This year
+            option(value='') All time
+    div.d-none
+        select#category-select.custom-select(title='Filter videos by category' name='videoCategoryId' aria-describedby='videoCategoryIdHelpBlock' data-default='')
+            include category-options
+        div#map-controls
+            button#geolocate.btn.btn-sm.btn-primary(type='button' title='Get my position' aria-label='Geolocation')
                 i.fa.fa-map-marker.fa-fw(aria-hidden='true')
-        input#place.form-control(name='search' type='search' value=place data-json=geocode placeholder='Search for the place to be...' aria-label='Search a place')
-        span.input-group-btn
-            button#paramsBtn.btn.btn-outline-primary(type='button' data-toggle="modal" data-target="#search-params" data-json='{}' title="Search options" aria-label='Search options')
-                i#paramsIcon.fa.fa-fw.fa-cog(aria-hidden='true')
+            input#place(name='search' type='search' value=place data-json=geocode placeholder='Search for the place to be...' aria-label='Search a place')

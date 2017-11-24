@@ -10,6 +10,7 @@ var autocomplete;
  */
 function initMap() {
   var geocode = JSON.parse(document.getElementById('place').getAttribute('data-json'));
+  //TODO hide mapTypeControlOptions on small screens
   map = new google.maps.Map(document.getElementById('map'), {
     center: geocode.geometry.location,
     clickableIcons: false,
@@ -17,13 +18,13 @@ function initMap() {
     keyboardShortcuts: false,
     mapTypeControl: true,
     mapTypeId: google.maps.MapTypeId.TERRAIN,
+    mapTypeControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_TOP
+    },
     maxZoom: 15,
     minZoom: 4,
     rotateControl: true,
     zoomControl: true,
-    zoomControlOptions: {
-      position: google.maps.ControlPosition.TOP_LEFT
-    },
     styles: googleMapStyle,
     zoom: 10
   });
@@ -34,6 +35,15 @@ function initMap() {
     );
     map.fitBounds(resultBounds);
   }
+  var input = /** @type {!HTMLInputElement} */(
+      document.getElementById('place'));
+  var geolocate = document.getElementById('geolocate');
+  var categories = document.getElementById('category-select');
+
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(geolocate);
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+  map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(categories);
+
   initAutocomplete();
   var videos = [];
   Array.from(document.getElementsByClassName('videolist-media')).forEach(function(element) {
@@ -117,47 +127,40 @@ function initMarkers(videos) {
   });
 }
 
-document.querySelector('#search-reset-params').addEventListener('click', resetSearchParams);
-
-document.getElementById('search-save-params').addEventListener('click', function(event) {
-  var data = {};
-  document.getElementById('search-params').querySelectorAll('input, select').forEach(function(control) {
-    if (control.value) {
-      data[control.getAttribute('name')] = control.value;
-    }
-  });
-  document.getElementById('paramsBtn').setAttribute('class', 'btn btn-primary');
-  document.getElementById('paramsBtn').setAttribute('data-json', JSON.stringify(data));
+document.getElementById('category-select').addEventListener('change', function() {
+  addSearchParam(this.getAttribute('name'), this.value);
   refreshVideoList();
 });
 
-$('#search-params')
-    .on('show.bs.modal', function() {
-      var data = JSON.parse(document.getElementById('paramsBtn').getAttribute('data-json'));
-      loadSearchParams(data);
-    })
-    .on('shown.bs.modal', function() {
-      document.getElementById('search-params-q').focus();
-    });
+$('input[type=radio][name=order]').change(function() {
+  addSearchParam(this.getAttribute('name'), this.value);
+  refreshVideoList();
+});
 
-function resetSearchParams() {
-  document.querySelectorAll('#search-params select').forEach(function(select) {
-    select.value = select.getAttribute('data-default');
-  });
-  document.querySelectorAll('#search-params input').forEach(function(input) {
-    input.value = '';
-  });
-}
+document.getElementById('publishedAfter').addEventListener('change', function() {
+  addSearchParam(this.getAttribute('name'), this.value);
+  refreshVideoList();
+});
 
-function loadSearchParams(data) {
-  resetSearchParams();
-  Object.keys(data).forEach(function(prop) {
-    document.querySelector('#search-params [name=' + prop + ']').value = data[prop];
-  });
+document.getElementById('search-params-q').addEventListener('change', function() {
+  addSearchParam(this.getAttribute('name'), this.value);
+});
+
+function addSearchParam(param, value) {
+  var btn = document.getElementById('searchBtn');
+  var data = btn.getAttribute('data-json') ? JSON.parse(btn.getAttribute('data-json')) : {};
+  if (value) {
+    data[param] = value;
+  } else if (data[param]) {
+    delete data[param];
+  }
+  btn.setAttribute('data-json', JSON.stringify(data));
 }
 
 document.querySelector('#search').addEventListener('submit', function(event) {
   event.preventDefault();
+  addSearchParam('q', document.getElementById('search-params-q').value);
+  refreshVideoList();
 });
 
 function playVideo(id) {
@@ -199,6 +202,8 @@ function backToMap() {
   $('#player-video').empty();
 }
 
+var request;
+
 /**
  * Triggered when map bounds changed
  * refresh videolist
@@ -211,11 +216,14 @@ function refreshVideoList() {
     boundlat: map.getBounds().getNorthEast().lat,
     boundlng: map.getBounds().getNorthEast().lng
   };
-  var paramsBtn = $('#paramsBtn');
-  if (paramsBtn.attr('data-json')) {
-    params.params = paramsBtn.attr('data-json');
+  var searchBtn = $('#searchBtn');
+  if (searchBtn.attr('data-json')) {
+    params.params = searchBtn.attr('data-json');
   }
-  $.getJSON(
+  if (request) {
+    request.abort();
+  }
+  request = $.getJSON(
       '/search.json',
       params,
       function(data) {
@@ -235,14 +243,15 @@ function refreshVideoList() {
           initMarkers(data.videos);
           $('#videolist-list').animate({scrollTop: 0}, 500);
         }
+        unspinSearch();
       },
       'json'
   )
       .fail(function() {
-        errorMessage('Failed to refresh video list');
-      })
-      .always(function() {
-        unspinSearch();
+        if (request.statusText !== 'abort') {
+          errorMessage('Failed to refresh video list');
+          unspinSearch();
+        }
       })
   ;
 }
@@ -261,9 +270,9 @@ document.querySelector('#nextPage').addEventListener('click', function(event) {
       boundlat: map.getBounds().getNorthEast().lat,
       boundlng: map.getBounds().getNorthEast().lng
     };
-    var paramsBtn = $('#paramsBtn');
-    if (paramsBtn.attr('data-json')) {
-      params.params = paramsBtn.attr('data-json');
+    var searchBtn = $('#searchBtn');
+    if (searchBtn.attr('data-json')) {
+      params.params = searchBtn.attr('data-json');
     }
     $.getJSON(
         '/search.json',
@@ -378,17 +387,17 @@ document.querySelector('#geolocate').addEventListener('click', function(event) {
 });
 
 function spinSearch() {
-  $('#paramsIcon')
-      .removeClass('fa-cog')
+  $('#searchIcon')
+      .removeClass('fa-search')
       .addClass('fa-refresh')
       .addClass('fa-spin');
 }
 
 function unspinSearch() {
-  $('#paramsIcon')
+  $('#searchIcon')
       .removeClass('fa-refresh')
       .removeClass('fa-spin')
-      .addClass('fa-cog');
+      .addClass('fa-search');
 }
 
 function disableGeoloc() {
