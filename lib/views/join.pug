@@ -1,0 +1,66 @@
+extends layout
+block append styles
+    link(rel='stylesheet' href='/stylesheets/join.css')
+
+block content
+    div.wrapper
+        form#joinform.form-join(method='POST')
+            h1.h2.form-join-heading.text-center Register
+            p.lead
+                | Complete this form to create an account and gain access to restricted functionalities
+            div.form-group
+                label(for='username') Choose a username
+                input#username(
+                type='text'
+                name='username'
+                value='' + (undefined === user ? '' : user.username)
+                class='form-control ' + ((undefined === errors) ? '' : (undefined === errors.username ? 'is-valid' : 'is-invalid'))
+                placeholder='Username'
+                required=''
+                autofocus=''
+                )
+                if (errors && errors.username)
+                    div.invalid-feedback #{errors.username.msg}
+                small#usernameHelp(class='form-text text-muted') This will be your public name.
+            div.form-group
+                label(for='email') Your email address
+                input#email(
+                type='text'
+                name='email'
+                value='' + (undefined === user ? '' : user.email)
+                class='form-control ' + ((undefined === errors) ? '' : (undefined === errors.email ? 'is-valid' : 'is-invalid'))
+                placeholder='Email Address'
+                required=''
+                )
+                if (errors && errors.email)
+                    div.invalid-feedback #{errors.email.msg}
+                small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+            div.form-group
+                label(for='password') Choose a password
+                input#password(
+                type='password'
+                name='password'
+                class='form-control ' + ((undefined === errors) ? '' : (undefined === errors.password ? 'is-valid' : 'is-invalid'))
+                placeholder='Password'
+                required=''
+                )
+                if (errors && errors.password)
+                    div.invalid-feedback #{errors.password.msg}
+                //small#passwordHelp(class='form-text text-muted') Your password must be 8-20 characters long.
+            div.form-group
+                label(for='passwordConf') Confirm the password
+                input#passwordConf(
+                type='password'
+                name='passwordConf'
+                class='form-control ' + ((undefined === errors) ? '' : (undefined === errors.passwordConf ? 'is-valid' : 'is-invalid'))
+                placeholder='Password confirmation'
+                required=''
+                )
+                if (errors && errors.passwordConf)
+                    div.invalid-feedback #{errors.passwordConf.msg}
+
+            button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
+            a.btn.btn-block(href='/users/login' role='button' aria-label='login')
+                i.fa.fa-question-circle
+                | &nbsp;
+                | I already have an account

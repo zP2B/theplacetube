@@ -1,0 +1,18 @@
+div#player
+    div#player-scroll-handler
+        a.alert.alert-warning(href='#' aria-hidden='true')
+            i.fa.fa-caret-down
+            | &nbsp;Back to the map&nbsp;
+            i.fa.fa-caret-down
+    div#player-headbar
+        button#player-headbar-close(type='button' aria-label='Back to the map' title='Close the video player and show the map')
+            i.fa.fa-fw.fa-times(aria-hidden='true')
+    div#player-video.embed-responsive.embed-responsive-16by9
+    div#player-meta
+        p#player-meta-title.h2.lead
+        div#player-meta-timeago.small.mb-2
+            i.fa.fa-clock-o.mr-1
+            | Uploaded&nbsp;
+            span#player-meta-timeago-value
+        div#player-meta-description.small.mb-3
+        div#player-meta-tags

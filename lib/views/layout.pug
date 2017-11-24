@@ -1,0 +1,42 @@
+doctype html
+html
+    head
+        script(src='/vendor/google-tag-manager.js')
+        meta(charset='utf-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        title The Place Tube #{title}
+        meta(name='description' content=description)
+        meta(property='og:title' content='The Place Tube')
+        meta(property='og:type' content='website')
+        meta(property='og:description' content='Explore the world with theplacetube.com the new generation of video search engine on maps')
+        meta(property='og:url' content='https://www.theplacetube.com')
+        meta(property='og:image' content='https://www.theplacetube.com/img/og-image.jpg')
+        meta(property='og:image:type' content='image/jpeg')
+        meta(property='og:image:width' content='1200')
+        meta(property='og:image:height' content='628')
+        meta(property='og:locale' content='en')
+        meta(property='fb:app_id' content='1937264793192087')
+        link(rel='icon' href='/favicon.ico')
+        link(rel='icon' href='/favicon.png' sizes='32x32' type='image/png')
+        link(rel='icon' href='/favicon.svg' sizes='any' type='image/svg+xml')
+
+        if video
+            meta(property='og:video' content='https://www.youtube.com/watch?v=' + video.youtubeId)
+        block styles
+            link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css' integrity='sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb' crossorigin='anonymous')
+            link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' integrity='sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN' crossorigin='anonymous')
+            link(rel='stylesheet' href='/stylesheets/style.css')
+
+    body
+        include includes/navbar
+        include includes/alert
+        main.fill
+            block content
+        footer.fixed-bottom
+            include includes/footer
+        block scripts
+            script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous')
+            script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js' integrity='sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh' crossorigin='anonymous')
+            script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js' integrity='sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ' crossorigin='anonymous')
+            script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js' integrity='sha256-zG8v+NWiZxmjNi+CvUYnZwKtHzFtdO8cAKUIdB8+U9I=' crossorigin='anonymous')
+            script(src='/scripts/alert.js')

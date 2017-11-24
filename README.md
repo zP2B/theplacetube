@@ -1,15 +1,11 @@
 # placetube
-> This is an opensource NodeJS prototype, free for use and fork.
+> This is a NodeJS project, free for use and fork without commercial use.
 
-Discover the place tube around you and share your videos on the map.
-
+Discover the videos from your city, your country or anywhere else in the world.
 
 ## Features
 
-With PlaceTube, people can now discover the world from his computer and smartphone.
-* Discover the world places by watching the community videos
-* Share you videos with the community
-* Make money from your videos by selling your rights or with the views
+Everybody can now explore the world from his computer or smartphone.
 
 ## Getting started
 
@@ -32,5 +28,4 @@ If you discover any security related issues, thank you for using the issue track
 - [Florian Ajir](https://github.com/florianajir)
 
 ## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+**Copyright 2017** - Forbidden commercial use
