@@ -10,6 +10,9 @@ block content
                 div#videolist-topbar
                     include includes/searchform/place
                 div#videolist-container
+                    div#list-overlay.overlay.d-none
+                        i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
+                        span.sr-only Loading
                     div#videolist-list
                         span#videolist-medias.list-group
                             each video in videos
