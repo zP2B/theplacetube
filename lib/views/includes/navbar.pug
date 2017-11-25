@@ -3,6 +3,21 @@ nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar
         i.fa.fa-map-marker(aria-hidden='true')
         | &nbsp;
         | The Place Tube
+    ul.navbar-nav
+        li.nav-item.dropdown#search-presets-dropdown
+            a#search-presets.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                i.fa.fa-trophy
+                | &nbsp;
+                | Top tubes
+            div.dropdown-menu(aria-labelledby='search-presets')
+                - var day = moment().subtract(1, 'days').toISOString()
+                - var week = moment().subtract(1, 'week').toISOString()
+                - var month = moment().subtract(1, 'month').toISOString()
+                - var year = moment().subtract(1, 'year').toISOString()
+                a.dropdown-item(href='?order=viewCount&period=day&publishedAfter=' + day data-json='{"order":"viewCount","period":"day"}') Top of the day
+                a.dropdown-item(href='?order=viewCount&period=week&publishedAfter=' + week data-json='{"order":"viewCount","period":"week"}') Top of the week
+                a.dropdown-item(href='?order=viewCount&period=month&publishedAfter=' + month data-json='{"order":"viewCount","period":"month"}') Top of the month
+                a.dropdown-item(href='?order=viewCount&period=year&publishedAfter=' + year data-json='{"order":"viewCount","period":"year"}') Top of the year
     button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
     div#navbarCollapse.collapse.navbar-collapse

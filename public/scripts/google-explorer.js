@@ -475,3 +475,18 @@ $(window).resize(function() {
     sizeTheOverlays();
   }
 });
+
+//TODO refactoring
+$('#search-presets-dropdown a.dropdown-item').click(function(e) {
+  e.preventDefault();
+  var data = JSON.parse($(this).attr('data-json'));
+  if (data.order) {
+    $('input[type=radio][name=order]').parent().removeClass('active');
+    $('input[type=radio][name=order][value=' + data.order + ']').parent().addClass('active');
+    $('input[type=radio][name=order][value=' + data.order + ']').prop('checked', true);
+  }
+  if (data.period) {
+    $('#publishedAfter').find('option[data-period=' + data.period + ']').prop('selected', true);
+  }
+  refreshVideoList();
+});
