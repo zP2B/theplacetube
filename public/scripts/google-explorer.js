@@ -9,6 +9,7 @@ var autocomplete;
  * async triggered on google map script load
  */
 function initMap() {
+  sizeTheOverlays();
   var geocode = JSON.parse(document.getElementById('place').getAttribute('data-json'));
   //TODO hide mapTypeControlOptions on small screens
   map = new google.maps.Map(document.getElementById('map'), {
@@ -391,6 +392,7 @@ function spinSearch() {
       .removeClass('fa-search')
       .addClass('fa-refresh')
       .addClass('fa-spin');
+  $('#list-overlay').removeClass('d-none');
 }
 
 function unspinSearch() {
@@ -398,6 +400,7 @@ function unspinSearch() {
       .removeClass('fa-refresh')
       .removeClass('fa-spin')
       .addClass('fa-search');
+  $('#list-overlay').addClass('d-none');
 }
 
 function disableGeoloc() {
@@ -455,3 +458,20 @@ function playerScrollHandler() {
     document.getElementById('player-scroll-handler').style.display = 'none';
   }
 }
+
+var sizeTheOverlays = function() {
+  $('.overlay').resize().each(function() {
+    var h = $(this).parent().height();
+    var w = $(this).parent().width();
+    $(this).css('height', h);
+    $(this).css('width', w);
+  });
+};
+
+var width = $(window).width();
+$(window).resize(function() {
+  if ($(this).width() !== width) {
+    width = $(this).width();
+    sizeTheOverlays();
+  }
+});

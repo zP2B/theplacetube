@@ -365,3 +365,14 @@ img#profileAvatar {
     width: 50%;
     text-align: center;
 }
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 3;
+    background: rgba(0, 0, 0, 0.4);
+    transition: opacity 500ms ease-in-out;
+    opacity: 1;
+}
