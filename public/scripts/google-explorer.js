@@ -17,11 +17,11 @@ function initMap() {
     clickableIcons: false,
     disableDefaultUI: true,
     keyboardShortcuts: false,
-    mapTypeControl: true,
-    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    mapTypeControl: false,
     mapTypeControlOptions: {
       position: google.maps.ControlPosition.RIGHT_TOP
     },
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
     maxZoom: 15,
     minZoom: 4,
     rotateControl: true,
@@ -152,7 +152,16 @@ function addSearchParam(param, value) {
   var data = btn.getAttribute('data-json') ? JSON.parse(btn.getAttribute('data-json')) : {};
   if (value) {
     data[param] = value;
-  } else if (data[param]) {
+  } else if (param in data) {
+    delete data[param];
+  }
+  btn.setAttribute('data-json', JSON.stringify(data));
+}
+
+function removeSearchParam(param) {
+  var btn = document.getElementById('searchBtn');
+  var data = btn.getAttribute('data-json') ? JSON.parse(btn.getAttribute('data-json')) : {};
+  if (param in data) {
     delete data[param];
   }
   btn.setAttribute('data-json', JSON.stringify(data));
@@ -476,17 +485,35 @@ $(window).resize(function() {
   }
 });
 
-//TODO refactoring
-$('#search-presets-dropdown a.dropdown-item').click(function(e) {
+$('#search-presets-dropdown').find('a.dropdown-item').click(function(e) {
   e.preventDefault();
   var data = JSON.parse($(this).attr('data-json'));
-  if (data.order) {
-    $('input[type=radio][name=order]').parent().removeClass('active');
-    $('input[type=radio][name=order][value=' + data.order + ']').parent().addClass('active');
-    $('input[type=radio][name=order][value=' + data.order + ']').prop('checked', true);
-  }
-  if (data.period) {
-    $('#publishedAfter').find('option[data-period=' + data.period + ']').prop('selected', true);
-  }
+  setFilters(data);
   refreshVideoList();
 });
+
+function setFilters(data) {
+  var input;
+  if (data.order) {
+    $('input[type=radio][name=order]').parent().removeClass('active');
+    input = $('input[type=radio][name=order][value=' + data.order + ']');
+    input.parent().addClass('active');
+    input.prop('checked', true);
+    addSearchParam('order', data.order);
+  }
+  if (data.period) {
+    input = $('#publishedAfter').find('option[data-period=' + data.period + ']');
+    input.prop('selected', true);
+    addSearchParam('publishedAfter', input.val());
+    removeSearchParam('period');
+  } else {
+    removeSearchParam('publishedAfter');
+  }
+  if (data.videoCategoryId) {
+    $('#category-select').find('option[value=' + data.videoCategoryId + ']').prop('selected', true);
+    addSearchParam('videoCategoryId', data.videoCategoryId);
+  } else {
+    $('#category-select').find('option[value=""]').prop('selected', true);
+    removeSearchParam('videoCategoryId');
+  }
+}
