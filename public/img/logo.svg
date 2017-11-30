@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+    <defs>
+        <style>.cls-1{fill:#90dfaa;}.cls-2{fill:#fff;}.cls-3{fill:#e6e9ee;}.cls-4{fill:#84dbff;}.cls-5{fill:#54c0eb;}.cls-6{fill:#f1543f;}</style>
+    </defs>
+    <title>Fichier 3</title>
+    <g id="Calque_2" data-name="Calque 2">
+        <g id="map">
+            <circle class="cls-1" cx="300" cy="300" r="300"/>
+            <polygon class="cls-2" points="218.69 447.62 89.76 402.62 178.21 213.69 251.67 227.02 218.69 447.62"/>
+            <polygon class="cls-3" points="218.69 447.62 354.88 402.38 329.17 213.69 251.67 227.02 218.69 447.62"/>
+            <polygon class="cls-2" points="517.62 447.62 354.88 402.38 329.17 213.69 410.6 227.02 517.62 447.62"/>
+            <polygon class="cls-4" points="388.1 246.91 332.26 236.67 350.36 369.64 454.76 397.62 388.1 246.91"/>
+            <polygon class="cls-4" points="190.36 239.64 124.88 382.98 222.86 413.33 247.86 250 190.36 239.64"/>
+            <polygon class="cls-5" points="332.26 236.67 247.86 250 222.86 413.33 350.36 369.64 332.26 236.67"/>
+            <path class="cls-6" d="M395,166.55c0,53.57-97,170.59-97,170.59s-97-117-97-170.59a97,97,0,1,1,194.05,0Z"/>
+            <circle class="cls-2" cx="297.86" cy="158.57" r="49.17"/>
+        </g>
+        <g id="Calque_2-2" data-name="Calque 2">
+            <path class="cls-6" d="M277,127l54,31.5L277,190Z"/>
+        </g>
+    </g>
+</svg>

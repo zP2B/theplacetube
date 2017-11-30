@@ -1,44 +1,48 @@
-nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark' id='nav-topbar')
-    a(class='navbar-brand' href='/')
-        i.fa.fa-map-marker(aria-hidden='true')
+nav#nav-topbar.navbar.navbar-expand-md.navbar-dark.fixed-top
+    a.navbar-brand.mr-4(href='/')
+        img(src='/img/logo.svg' width='30' height='30' class='d-inline-block align-top' alt='')
         | &nbsp;
-        | The Place Tube
-    ul.navbar-nav
-        li.nav-item.dropdown#search-presets-dropdown
-            a#search-presets.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                i.fa.fa-trophy
-                | &nbsp;
-                | Top tubes
-            div.dropdown-menu(aria-labelledby='search-presets')
-                - var day = moment().subtract(1, 'days').toISOString()
-                - var week = moment().subtract(1, 'week').toISOString()
-                - var month = moment().subtract(1, 'month').toISOString()
-                - var year = moment().subtract(1, 'year').toISOString()
-                a.dropdown-item(href='?order=viewCount&period=day&publishedAfter=' + day data-json='{"order":"viewCount","period":"day"}') Top of the day
-                a.dropdown-item(href='?order=viewCount&period=week&publishedAfter=' + week data-json='{"order":"viewCount","period":"week"}') Top of the week
-                a.dropdown-item(href='?order=viewCount&period=month&publishedAfter=' + month data-json='{"order":"viewCount","period":"month"}') Top of the month
-                a.dropdown-item(href='?order=viewCount&period=year&publishedAfter=' + year data-json='{"order":"viewCount","period":"year"}') Top of the year
+        | ThePlaceTube
     button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
     div#navbarCollapse.collapse.navbar-collapse
+        ul.navbar-nav
+            li.nav-item.dropdown#search-presets-dropdown
+                a#search-presets.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                    i.fa.fa-youtube
+                    | &nbsp;
+                    | Select tubes
+                div.dropdown-menu(aria-labelledby='search-presets')
+                    a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"day"}')
+                        i.fa.fa-fw.fa-line-chart
+                        | &nbsp;
+                        | Trending videos
+                    a.dropdown-item(href='#' data-json='{"order":"date","period":"week", "videoCategoryId":25}')
+                        i.fa.fa-fw.fa-newspaper-o
+                        | &nbsp;
+                        | News of the week
+                    a.dropdown-item(href='#' data-json='{"order":"rating","period":"month", "videoCategoryId":10}')
+                        i.fa.fa-fw.fa-music
+                        | &nbsp;
+                        | Best musics this month
+                    a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"year"}')
+                        i.fa.fa-fw.fa-trophy
+                        | &nbsp;
+                        | Top videos this year
         ul.navbar-nav.mr-auto
         ul.navbar-nav
             if (typeof user === 'undefined')
                 div.btn-toolbar
                     a.btn.btn-sm.btn-success(href='/users/login')
-                        i.fa.fa-sign-in(aria-hidden='true')
+                        i.fa.fa-sign-in
                         | &nbsp;
                         | Login
             else
                 li.nav-item.dropdown
                     a#usermenu.nav-link.dropdown-toggle.unselectable(href='/users/profile/' + user.username data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                        i.fa.fa-user(aria-hidden='true')
+                        i.fa.fa-user
                         | &nbsp; #{user.username}
                     div.dropdown-menu.dropdown-menu-right
-                        //a.dropdown-item(href='/videos/add')
-                        //    i.fa.fa-share.fa-fw.mr-2
-                        //    | Share a video
-                        //div.dropdown-divider
-                        a(class='dropdown-item' href='/users/logout')
-                            i.fa.fa-sign-out.fa-fw.mr-2(aria-hidden='true')
+                        a.dropdown-item(href='/users/logout')
+                            i.fa.fa-sign-out.fa-fw.mr-2
                             | Logout
