@@ -1,7 +1,7 @@
 const forever = require('forever-monitor');
 
 const child = new (forever.Monitor)('bin/www', {
-  max: 10,
+  max: 5,
   silent: true,
   args: [],
   logFile: 'logs/forever.out',
