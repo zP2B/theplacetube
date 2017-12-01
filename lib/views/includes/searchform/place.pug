@@ -8,25 +8,26 @@ form#search
                 i#searchIcon.fa.fa-fw.fa-search(aria-hidden='true')
     div.btn-toolbar.justify-content-between(role='toolbar' aria-label='Filter and sort toolbar')
         div#sort-group.btn-group.btn-group-sm.mr-1(data-toggle='buttons' role='group')
-            label.btn.btn-light(title='order by date')
-                input(type='radio' name='order' value='date' autocomplete='off')
-                i.fa.fa-calendar
-            label.btn.btn-light.active(title='order by views count')
-                input(type='radio' name='order' value='viewCount' autocomplete='off' checked)
+            - var order = params.order
+            label.btn.btn-light(title='order by views count' class=order === 'viewCount' || !order ? 'active' : '')
+                input(type='radio' name='order' value='viewCount' autocomplete='off' checked=order === 'viewCount')
                 i.fa.fa-eye
-            label.btn.btn-light(title='order by rating')
-                input(type='radio' name='order' value='rating' autocomplete='off')
+            label.btn.btn-light(title='order by date' class=order === 'date' ? 'active' : '')
+                input(type='radio' name='order' value='date' autocomplete='off' checked=order === 'date')
+                i.fa.fa-calendar
+            label.btn.btn-light(title='order by rating' class=order === 'rating' ? 'active' : '')
+                input(type='radio' name='order' value='rating' autocomplete='off' checked=order === 'rating')
                 i.fa.fa-star
-            label.btn.btn-light(title='order by relevance')
-                input(type='radio' name='order' value='relevance' autocomplete='off')
+            label.btn.btn-light(title='order by relevance' class=order === 'relevance' ? 'active' : '')
+                input(type='radio' name='order' value='relevance' autocomplete='off' checked=order === 'relevance')
                 i.fa.fa-search
         select#publishedAfter(aria-label='Upload date' name='publishedAfter')
             option(value='' selected) Upload date
-            option(value=moment().subtract(1, 'hours').toISOString()) Last hour
-            option(value=moment().subtract(1, 'days').toISOString()) Today
-            option(value=moment().subtract(1, 'weeks').toISOString()) This week
-            option(value=moment().subtract(1, 'months').toISOString()) This month
-            option(value=moment().subtract(1, 'year').toISOString()) This year
+            option(value=moment().subtract(1, 'hours').toISOString() data-period='hour') Last hour
+            option(value=moment().subtract(1, 'days').toISOString() data-period='day') Today
+            option(value=moment().subtract(1, 'weeks').toISOString() data-period='week') This week
+            option(value=moment().subtract(1, 'months').toISOString() data-period='month') This month
+            option(value=moment().subtract(1, 'year').toISOString() data-period='year') This year
             option(value='') All time
     div.d-none
         select#category-select.custom-select(title='Filter videos by category' name='videoCategoryId' aria-describedby='videoCategoryIdHelpBlock' data-default='')

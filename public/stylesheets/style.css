@@ -1,7 +1,17 @@
-/* Move down content because we have a fixed navbar that is 3.5rem tall */
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower|Kaushan+Script');
+
+#nav-topbar {
+    background-color: black;
+}
+
+.navbar-brand {
+    font-family: 'Kaushan Script', cursive;
+}
+
 html, body {
     height: 100%;
     min-height: 100%;
+    font-family: 'Indie Flower', cursive;
 }
 
 body {
@@ -54,7 +64,6 @@ input[type=number] {
 
 #leftPanel, #rightPanel {
     max-height: 100%;
-    /*flex: 1;*/
 }
 
 #rightPanel {
@@ -62,10 +71,6 @@ input[type=number] {
 }
 
 .jumbotron {
-    background-color: white;
-}
-
-#nav-topbar {
     background-color: white;
 }
 
@@ -275,6 +280,7 @@ a.media.video.videolist-media.list-group-item.list-group-item-warning .videolist
 
 .videolist-media {
     cursor: pointer;
+    font-family: Roboto, Arial, sans-serif;
 }
 
 a.video-link {
@@ -317,7 +323,8 @@ img#profileAvatar {
     max-width: 300px;
     padding: 0 11px 0 13px;
     border-radius: 0;
-    font-size: 1.3em;
+    font-size: 1.3rem;
+    font-family: 'Indie Flower', cursive;
 }
 
 #place:focus {
@@ -327,10 +334,15 @@ img#profileAvatar {
 #category-select {
     margin-bottom: 20px;
     height: auto;
+    font-size: 0.9rem;
+}
+
+#search-params-q:focus {
+    border-color: #4d90fe;
+    box-shadow: none;
 }
 
 #sort-group .btn {
-    box-shadow: none;
     margin-bottom: 0;
 }
 
@@ -375,4 +387,8 @@ img#profileAvatar {
     background: rgba(0, 0, 0, 0.4);
     transition: opacity 500ms ease-in-out;
     opacity: 1;
+}
+
+#search-presets-dropdown .dropdown-item:hover {
+    font-weight: bold;
 }
