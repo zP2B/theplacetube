@@ -55,6 +55,7 @@ function initMap() {
     map.addListener('dragend', refreshVideoList);
     map.addListener('zoom_changed', refreshVideoList);
   });
+  $(document).keyup(handleEscape);
 }
 
 /**
@@ -515,5 +516,11 @@ function setFilters(data) {
   } else {
     $('#category-select').find('option[value=""]').prop('selected', true);
     removeSearchParam('videoCategoryId');
+  }
+}
+
+function handleEscape(e) {
+  if (e.keyCode === 27 && document.querySelector('.video.active')) { // escape key maps to keycode `27`
+    backToMap();
   }
 }
