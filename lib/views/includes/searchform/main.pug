@@ -11,16 +11,14 @@ form#search
             - var order = params.order
             label.btn.btn-light(title='order by views count' class=order === 'viewCount' || !order ? 'active' : '')
                 input(type='radio' name='order' value='viewCount' autocomplete='off' checked=order === 'viewCount')
-                i.fa.fa-eye
+                i.fa.fa-eye.mr-1
+                | views
+                i.fa.fa-sort-desc.ml-1
             label.btn.btn-light(title='order by date' class=order === 'date' ? 'active' : '')
                 input(type='radio' name='order' value='date' autocomplete='off' checked=order === 'date')
-                i.fa.fa-calendar
-            label.btn.btn-light(title='order by rating' class=order === 'rating' ? 'active' : '')
-                input(type='radio' name='order' value='rating' autocomplete='off' checked=order === 'rating')
-                i.fa.fa-star
-            label.btn.btn-light(title='order by relevance' class=order === 'relevance' ? 'active' : '')
-                input(type='radio' name='order' value='relevance' autocomplete='off' checked=order === 'relevance')
-                i.fa.fa-search
+                i.fa.fa-calendar.mr-1
+                | date
+                i.fa.fa-sort-desc.ml-1
         select#publishedAfter(aria-label='Upload date' name='publishedAfter')
             option(value='' selected) Upload date
             option(value=moment().subtract(1, 'hours').toISOString() data-period='hour') Last hour
