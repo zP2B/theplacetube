@@ -8,7 +8,7 @@
     "start": "node ./bin/www",
     "test": "snyk test"
   },
-  "repository": "https://github.com/florianajir/theplacetube.git",
+  "repository": "https://github.com/zP2B/theplacetube.git",
   "keywords": [
     "theplacetube",
     "video",
@@ -21,11 +21,11 @@
     "influencers"
   ],
   "author": "florianajir",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/florianajir/theplacetube/issues"
+    "url": "https://github.com/zP2B/theplacetube/issues"
   },
-  "homepage": "https://github.com/florianajir/theplacetube#readme",
+  "homepage": "https://github.com/zP2B/theplacetube#readme",
   "engines": {
     "node": "^6.6.0"
   },
