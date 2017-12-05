@@ -323,7 +323,7 @@ img#profileAvatar {
     max-width: 300px;
     padding: 0 11px 0 13px;
     border-radius: 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-family: 'Indie Flower', cursive;
 }
 
@@ -335,6 +335,7 @@ img#profileAvatar {
     margin-bottom: 20px;
     height: auto;
     font-size: 0.9rem;
+    box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, .5);
 }
 
 #search-params-q:focus {
@@ -344,6 +345,7 @@ img#profileAvatar {
 
 #sort-group .btn {
     margin-bottom: 0;
+    text-transform: capitalize;
 }
 
 #searchBtn:active {
@@ -391,4 +393,12 @@ img#profileAvatar {
 
 #search-presets-dropdown .dropdown-item:hover {
     font-weight: bold;
+}
+
+#sort-group label:not(.active) i.fa-sort-desc {
+    display: none;
+}
+
+#sort-group label.active i.fa-sort-desc {
+    display: inline-block;
 }

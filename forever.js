@@ -1,7 +1,7 @@
 const forever = require('forever-monitor');
 
 const child = new (forever.Monitor)('bin/www', {
-  max: 10,
+  max: 5,
   silent: true,
   args: [],
   logFile: 'logs/forever.out',
@@ -18,7 +18,7 @@ child.on('exit:code', function(code) {
 });
 
 child.on('exit', function() {
-  console.log('server has exited after 3 restarts');
+  console.log('Forever has exited');
 });
 
 child.start();
