@@ -168,6 +168,15 @@ function removeSearchParam(param) {
   btn.setAttribute('data-json', JSON.stringify(data));
 }
 
+function getParam(param) {
+  var btn = document.getElementById('searchBtn');
+  var data = btn.getAttribute('data-json') ? JSON.parse(btn.getAttribute('data-json')) : {};
+  if (param in data) {
+    return data[param];
+  }
+  return null;
+}
+
 document.querySelector('#search').addEventListener('submit', function(event) {
   event.preventDefault();
   addSearchParam('q', document.getElementById('search-params-q').value);
@@ -313,6 +322,7 @@ document.querySelector('#nextPage').addEventListener('click', function(event) {
  * @param data videos data server response
  */
 function populateVideoList(data) {
+  var order = getParam('order');
   $.each(data, function(index, video) {
     var media = $('<a>')
         .attr('class', 'media video videolist-media list-group-item list-group-item-action')
@@ -331,7 +341,7 @@ function populateVideoList(data) {
         .append(
             $('<div class="row"/>')
                 .append($('<p class="videolist-footer h6 col-7 pr-0"/>').text(video.author))
-                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(video.timeago))
+                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(order === 'viewCount' ? formatViewCount(video.statistics.viewCount) + ' views' : video.timeago))
         );
     media.append(body);
     $('#videolist-medias').append(media);
@@ -385,21 +395,25 @@ function clearMarkers() {
 document.querySelector('#geolocate').addEventListener('click', function(event) {
   disableGeoloc();
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      reverseGeocode(pos);
-    }, function() {
-      handleLocationError(true);
-      enableGeoloc();
-    });
+    navigator.geolocation.getCurrentPosition(successGeoLoc, errorGeoLoc);
   } else {
     handleLocationError(false);
     enableGeoloc();
   }
 });
+
+function successGeoLoc(position) {
+  var pos = {
+    lat: position.coords.latitude,
+    lng: position.coords.longitude
+  };
+  reverseGeocode(pos);
+}
+
+function errorGeoLoc() {
+  handleLocationError(true);
+  enableGeoloc();
+}
 
 function spinSearch() {
   $('#searchIcon')
