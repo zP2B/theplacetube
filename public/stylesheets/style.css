@@ -11,6 +11,10 @@
 html, body {
     height: 100%;
     min-height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+nav.navbar, #search {
     font-family: 'Indie Flower', cursive;
 }
 
@@ -309,6 +313,7 @@ img#profileAvatar {
 }
 
 #place {
+    text-align: center;
     text-overflow: ellipsis;
     margin-top: 10px;
     border: 1px solid transparent;
