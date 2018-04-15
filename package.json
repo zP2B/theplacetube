@@ -3,10 +3,9 @@
   "version": "0.2.0",
   "description": "Search youtube videos by location",
   "scripts": {
-    "forever": "node ./forever.js",
-    "nodemon": "nodemon --debug ./bin/www",
+    "devstart": "nodemon --debug ./bin/www",
     "start": "node ./bin/www",
-    "test": "snyk test"
+    "test": "jest"
   },
   "repository": "https://github.com/zP2B/theplacetube.git",
   "keywords": [
@@ -62,6 +61,7 @@
     "winston-daily-rotate-file": "^1.7.2"
   },
   "devDependencies": {
-    "snyk": "^1.40.2"
+    "jest": "^22.4.3",
+    "snyk": "^1.71.0"
   }
 }
