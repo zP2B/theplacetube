@@ -4,7 +4,8 @@
   "description": "Search youtube videos by location",
   "scripts": {
     "devstart": "nodemon --debug ./bin/www",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "jest"
   },
   "repository": "https://github.com/zP2B/theplacetube.git",
   "keywords": [
