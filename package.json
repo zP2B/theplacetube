@@ -61,6 +61,7 @@
     "winston-daily-rotate-file": "^1.7.2"
   },
   "devDependencies": {
+    "jest": "^22.4.3",
     "snyk": "^1.71.0"
   }
 }
