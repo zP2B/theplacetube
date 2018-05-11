@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+import createLocaleMiddleware from 'express-locale';
 const path = require('path');
 const favicon = require('serve-favicon');
 const morgan = require('morgan');
@@ -44,6 +45,10 @@ app.use(session({
     mongooseConnection: mongoose.connection
   })
 }));
+app.use(createLocaleMiddleware())
+    .use((req, res) => {
+        res.end(`Request locale: ${req.locale}`);
+    });
 
 app.use(morgan('combined', {
   skip: function(req, res) {

@@ -40,11 +40,12 @@ function initMap() {
       document.getElementById('place'));
   var geolocate = document.getElementById('geolocate');
   var categories = document.getElementById('category-select');
+  var live = document.getElementById('eventTypeContainer');
 
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(geolocate);
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(live);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(categories);
-
   initAutocomplete();
   var videos = [];
   Array.from(document.getElementsByClassName('videolist-media')).forEach(function(element) {
@@ -55,6 +56,7 @@ function initMap() {
     map.addListener('dragend', refreshVideoList);
     map.addListener('zoom_changed', refreshVideoList);
   });
+    live.style['margin-top'] = '10px';
   $(document).keyup(handleEscape);
 }
 
@@ -142,6 +144,11 @@ $('input[type=radio][name=order]').change(function() {
 document.getElementById('publishedAfter').addEventListener('change', function() {
   addSearchParam(this.getAttribute('name'), this.value);
   refreshVideoList();
+});
+
+$('#eventType').change(function() {
+    addSearchParam(this.getAttribute('name'), this.checked ? this.value : null);
+    refreshVideoList();
 });
 
 document.getElementById('search-params-q').addEventListener('change', function() {
