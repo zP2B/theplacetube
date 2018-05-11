@@ -347,7 +347,7 @@ function populateVideoList(data) {
         .append(
             $('<div class="row"/>')
                 .append($('<p class="videolist-footer h6 col-7 pr-0"/>').text(video.author))
-                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(order === 'viewCount' ? formatViewCount(video.statistics.viewCount) + ' views' : video.timeago))
+                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(order === 'viewCount' || !order ? formatViewCount(video.statistics.viewCount) + ' views' : video.timeago))
         );
     media.append(body);
     $('#videolist-medias').append(media);
