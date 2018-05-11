@@ -56,7 +56,6 @@ function initMap() {
     map.addListener('dragend', refreshVideoList);
     map.addListener('zoom_changed', refreshVideoList);
   });
-    live.style['margin-top'] = '10px';
   $(document).keyup(handleEscape);
 }
 
