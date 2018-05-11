@@ -25,9 +25,6 @@
     "url": "https://github.com/zP2B/theplacetube/issues"
   },
   "homepage": "https://github.com/zP2B/theplacetube#readme",
-  "engines": {
-    "node": "^6.6.0"
-  },
   "dependencies": {
     "@google/maps": "^0.4.5",
     "@webcomponents/webcomponentsjs": "^1.0.14",

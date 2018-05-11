@@ -9,12 +9,12 @@ form#search
     div.btn-toolbar.justify-content-between(role='toolbar' aria-label='Filter and sort toolbar')
         div#sort-group.btn-group.btn-group-sm.mr-1(data-toggle='buttons' role='group')
             - var order = params.order
-            label.btn.btn-light(title='order by date' class=order === 'date' || !order ? 'active' : '')
+            label.btn.btn-light(title='order by date' class=order === 'date' ? 'active' : '')
                 input(type='radio' name='order' value='date' autocomplete='off' checked=order === 'date')
                 i.fa.fa-calendar.mr-1
                 | date
                 i.fa.fa-sort-desc.ml-1
-            label.btn.btn-light(title='order by views count' class=order === 'viewCount' ? 'active' : '')
+            label.btn.btn-light(title='order by views count' class=order === 'viewCount' || !order ? 'active' : '')
                 input(type='radio' name='order' value='viewCount' autocomplete='off' checked=order === 'viewCount')
                 i.fa.fa-eye.mr-1
                 | views
