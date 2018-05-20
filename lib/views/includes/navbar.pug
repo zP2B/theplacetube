@@ -6,37 +6,38 @@ nav#nav-topbar.navbar.navbar-expand-md.navbar-dark.fixed-top
     button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
     div#navbarCollapse.collapse.navbar-collapse
-        ul.navbar-nav
-            li.nav-item.dropdown#search-presets-dropdown
-                a#search-presets.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                    i.fa.fa-youtube
-                    | &nbsp;
-                    | Select tubes
-                div.dropdown-menu(aria-labelledby='search-presets')
-                    a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"day"}')
-                        i.fa.fa-fw.fa-line-chart
+        if (typeof videos !== 'undefined')
+            ul.navbar-nav
+                li.nav-item.dropdown#search-presets-dropdown
+                    a#search-presets.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                        i.fa.fa-youtube
                         | &nbsp;
-                        | Trending videos today
-                    a.dropdown-item(href='#' data-json='{"order":"date","period":"week", "videoCategoryId":25}')
-                        i.fa.fa-fw.fa-newspaper-o
-                        | &nbsp;
-                        | News of the week
-                    a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"month", "videoCategoryId":10}')
-                        i.fa.fa-fw.fa-music
-                        | &nbsp;
-                        | Best musics this month
-                    a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"year"}')
-                        i.fa.fa-fw.fa-trophy
-                        | &nbsp;
-                        | Top videos of the year
+                        | Select tubes
+                    div.dropdown-menu(aria-labelledby='search-presets')
+                        a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"day"}')
+                            i.fa.fa-fw.fa-line-chart
+                            | &nbsp;
+                            | Trending videos today
+                        a.dropdown-item(href='#' data-json='{"order":"date","period":"week", "videoCategoryId":25}')
+                            i.fa.fa-fw.fa-newspaper-o
+                            | &nbsp;
+                            | News of the week
+                        a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"month", "videoCategoryId":10}')
+                            i.fa.fa-fw.fa-music
+                            | &nbsp;
+                            | Best musics this month
+                        a.dropdown-item(href='#' data-json='{"order":"viewCount","period":"year"}')
+                            i.fa.fa-fw.fa-trophy
+                            | &nbsp;
+                            | Top videos of the year
         ul.navbar-nav.mr-auto
         ul.navbar-nav
             if (typeof user === 'undefined')
                 div.btn-toolbar
-                    a.btn.btn-sm.btn-success(href='/users/login')
+                    a.btn.btn-sm.btn-success(href='/users/join')
                         i.fa.fa-sign-in
                         | &nbsp;
-                        | Login
+                        | Join community
             else
                 li.nav-item.dropdown
                     a#usermenu.nav-link.dropdown-toggle.unselectable(href='/users/profile/' + user.username data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
