@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express');
-// import createLocaleMiddleware from 'express-locale';
 const path = require('path');
+const debug = require('debug')('theplacetube:server');
 const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -31,7 +31,10 @@ mongoose.Promise = global.Promise;
 // connect to MongoDB
 mongoose
     .connect(nconf.get('mongodb_uri'), {useMongoClient: true})
-    .catch((err) => console.error(err));
+    .catch((err) => {
+        debug("mongoose error");
+        console.error(err);
+    });
 
 const app = express();
 app.set('trust proxy', true);
@@ -45,10 +48,6 @@ app.use(session({
     mongooseConnection: mongoose.connection
   })
 }));
-// app.use(createLocaleMiddleware())
-//     .use((req, res) => {
-//         res.end(`Request locale: ${req.locale}`);
-//     });
 
 app.use(morgan('combined', {
   skip: function(req, res) {
@@ -99,6 +98,7 @@ app.use((req, res, next) => {
 app.use(clientErrorHandler);
 
 function clientErrorHandler(err, req, res, next) {
+  debug(req.method + ' ' + req.url);
   if (req.xhr) {
     logger.error(err.message, err.stack);
     return res.status(500).send({error: err.message});
