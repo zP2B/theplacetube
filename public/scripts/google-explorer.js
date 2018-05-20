@@ -541,6 +541,8 @@ function setFilters(data) {
     $('#category-select').find('option[value=""]').prop('selected', true);
     removeSearchParam('videoCategoryId');
   }
+  removeSearchParam('eventType');
+  $('#eventTypeBtn').removeClass('active');
 }
 
 function handleEscape(e) {
