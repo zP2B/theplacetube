@@ -95,24 +95,16 @@ app.use((req, res, next) => {
   return next(err);
 });
 
-app.use(clientErrorHandler);
-
-function clientErrorHandler(err, req, res, next) {
-  debug(req.method + ' ' + req.url);
-  if (req.xhr) {
-    logger.error(err.message, err.stack);
-    return res.status(500).send({error: err.message});
-  }
-  next(err);
-}
-
 app.use(errorhandler);
 
 function errorhandler(err, req, res, next) {
+  debug(req.method + ' ' + req.url);
+  logger.error("Error handler: " + err.message, err.stack);
   res.locals.message = err.message;
   res.locals.error = app.get('env') === 'development' ? err : {};
-  console.error(err.stack);
-  logger.error(err.message, err.stack);
+  if (req.xhr) {
+      return res.status(500).send({error: err.message});
+  }
   res.status(err.status || 500);
   res.render('error');
 }
