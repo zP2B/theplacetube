@@ -40,11 +40,12 @@ function initMap() {
       document.getElementById('place'));
   var geolocate = document.getElementById('geolocate');
   var categories = document.getElementById('category-select');
+  var live = document.getElementById('eventTypeContainer');
 
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(geolocate);
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(live);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(categories);
-
   initAutocomplete();
   var videos = [];
   Array.from(document.getElementsByClassName('videolist-media')).forEach(function(element) {
@@ -142,6 +143,11 @@ $('input[type=radio][name=order]').change(function() {
 document.getElementById('publishedAfter').addEventListener('change', function() {
   addSearchParam(this.getAttribute('name'), this.value);
   refreshVideoList();
+});
+
+$('#eventType').change(function() {
+    addSearchParam(this.getAttribute('name'), this.checked ? this.value : null);
+    refreshVideoList();
 });
 
 document.getElementById('search-params-q').addEventListener('change', function() {
@@ -341,7 +347,7 @@ function populateVideoList(data) {
         .append(
             $('<div class="row"/>')
                 .append($('<p class="videolist-footer h6 col-7 pr-0"/>').text(video.author))
-                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(order === 'viewCount' ? formatViewCount(video.statistics.viewCount) + ' views' : video.timeago))
+                .append($('<p class="videolist-footer h6 text-right col-5 pl-0"/>').text(order === 'viewCount' || !order ? formatViewCount(video.statistics.viewCount) + ' views' : video.timeago))
         );
     media.append(body);
     $('#videolist-medias').append(media);
@@ -535,6 +541,8 @@ function setFilters(data) {
     $('#category-select').find('option[value=""]').prop('selected', true);
     removeSearchParam('videoCategoryId');
   }
+  removeSearchParam('eventType');
+  $('#eventTypeBtn').removeClass('active');
 }
 
 function handleEscape(e) {

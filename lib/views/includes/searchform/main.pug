@@ -6,20 +6,20 @@ form#search
         span.input-group-btn
             button#searchBtn.btn.btn-primary(type='submit' title='Search' aria-label='Search')
                 i#searchIcon.fa.fa-fw.fa-search(aria-hidden='true')
-    div.btn-toolbar.justify-content-between(role='toolbar' aria-label='Filter and sort toolbar')
+    div.btn-toolbar.justify-content-between(role='toolbar' aria-label='Sort toolbar')
         div#sort-group.btn-group.btn-group-sm.mr-1(data-toggle='buttons' role='group')
             - var order = params.order
-            label.btn.btn-light(title='order by date' class=order === 'date' || !order ? 'active' : '')
+            label.btn.btn-light(title='Sort videos by date' class=order === 'date' ? 'active' : '')
                 input(type='radio' name='order' value='date' autocomplete='off' checked=order === 'date')
                 i.fa.fa-calendar.mr-1
                 | date
                 i.fa.fa-sort-desc.ml-1
-            label.btn.btn-light(title='order by views count' class=order === 'viewCount' ? 'active' : '')
+            label.btn.btn-light(title='Sort videos by views count' class=order === 'viewCount' || !order ? 'active' : '')
                 input(type='radio' name='order' value='viewCount' autocomplete='off' checked=order === 'viewCount')
                 i.fa.fa-eye.mr-1
                 | views
                 i.fa.fa-sort-desc.ml-1
-        select#publishedAfter(aria-label='Upload date' name='publishedAfter')
+        select#publishedAfter(aria-label='Upload date' name='publishedAfter' title='Filter videos by upload date')
             option(value='' selected) Upload date
             option(value=moment().subtract(1, 'hours').toISOString() data-period='hour') Last hour
             option(value=moment().subtract(1, 'days').toISOString() data-period='day') Today
@@ -33,4 +33,9 @@ form#search
         div#map-controls
             button#geolocate.btn.btn-sm.btn-primary(type='button' title='Get my position' aria-label='Geolocation')
                 i.fa.fa-map-marker.fa-fw(aria-hidden='true')
-            input#place(name='search' type='search' value=place data-json=geocode placeholder='Search for the place to be...' aria-label='Search a place')
+            input#place(name='search' type='search' value=place data-json=geocode placeholder='Search your place' aria-label='Search a place')
+        div#eventTypeContainer.btn-group.btn-group-sm.btn-group-toggle.m-2(data-toggle="buttons")
+            label#eventTypeBtn.btn.btn-sm.btn-outline-danger.mb-0(title='Restrict the search to live broadcasts')
+                input#eventType(type="checkbox" aria-pressed="false" autocomplete="off" name='eventType' value='live')
+                i.fa.fa-circle.mr-1
+                | Live

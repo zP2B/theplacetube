@@ -22,7 +22,7 @@ block content
                                         h2.videolist-title.h6= video.title
                                         div.row
                                             p.videolist-footer.h6.col-7.pr-0= video.author
-                                            p.videolist-footer.h6.col-5.text-right.pl-0= video.timeago
+                                            p.videolist-footer.h6.col-5.text-right.pl-0 #{new Intl.NumberFormat().format(video.statistics.viewCount)} views
                         nav#videolist-pagination(aria-label='Page navigation')
                             ul.pagination.justify-content-center
                                 li.page-item
