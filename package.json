@@ -55,8 +55,7 @@
     "serve-favicon": "^2.4.5",
     "underscore": "^1.12.1",
     "underscore.string": "^3.3.4",
-    "winston": "^2.4.0",
-    "winston-daily-rotate-file": "^3.0.0"
+    "winston": "^3.0.1"
   },
   "devDependencies": {
     "jest": "^22.4.3",

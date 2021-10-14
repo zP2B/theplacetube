@@ -30,11 +30,9 @@ nconf
 mongoose.Promise = global.Promise;
 // connect to MongoDB
 mongoose
-    .connect(nconf.get('mongodb_uri'), {useMongoClient: true})
-    .catch((err) => {
-        debug("mongoose error");
-        console.error(err);
-    });
+    .connect(nconf.get('mongodb_uri'), { useNewUrlParser: true,  useUnifiedTopology: true })
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.log(err));
 
 const app = express();
 app.set('trust proxy', true);
@@ -72,7 +70,6 @@ app.set('view engine', 'pug');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/get-youtube-id', express.static(__dirname + '/node_modules/get-youtube-id'));
