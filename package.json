@@ -28,7 +28,7 @@
   "dependencies": {
     "@google/maps": "^0.4.5",
     "@webcomponents/webcomponentsjs": "^1.0.14",
-    "axios": "^0.21.3",
+    "axios": "^1.6.3",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.18.2",
     "connect-mongo": "^3.0.0",
